@@ -1,0 +1,317 @@
+.body,
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+input,
+select,
+textarea,
+table {
+  font-family: "Montserrat", sans-serif !important;
+}
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 700px;
+  height: 76%;
+}
+
+.demoForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.demoMain {
+  display: flex;
+  min-height: 92%;
+  /* flex-direction: column;
+    align-items: center; */
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  width: 65%;
+}
+.main {
+  height: 100vh;
+}
+.lotties {
+  height: 15%;
+}
+
+.tbody {
+  max-height: 450px;
+  /* height: 450px; */
+  display: block;
+  overflow: auto;
+  padding-top: 50px;
+}
+.table-main tr {
+  display: grid;
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  grid-template-columns: 10% 35% 55%;
+  word-break: break-all;
+}
+.background-radial-gradient {
+  background-color: hsl(218, 41%, 15%);
+  background-image: radial-gradient(
+      650px circle at 0% 0%,
+      hsl(218, 41%, 35%) 15%,
+      hsl(218, 41%, 30%) 35%,
+      hsl(218, 41%, 20%) 75%,
+      hsl(218, 41%, 19%) 80%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1250px circle at 100% 100%,
+      hsl(218, 41%, 45%) 15%,
+      hsl(218, 41%, 30%) 35%,
+      hsl(218, 41%, 20%) 75%,
+      hsl(218, 41%, 19%) 80%,
+      transparent 100%
+    );
+  height: calc(100vh - 86px);
+}
+
+#radius-shape-1 {
+  height: 220px;
+  width: 220px;
+  top: -60px;
+  left: -130px;
+  background: radial-gradient(#44006b, #ad1fff);
+  overflow: hidden;
+}
+
+#radius-shape-2 {
+  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+  bottom: -60px;
+  right: -110px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(#44006b, #ad1fff);
+  overflow: hidden;
+}
+
+.bg-glass {
+  background-color: hsla(0, 0%, 100%, 0.9) !important;
+  backdrop-filter: saturate(200%) blur(25px);
+}
+.demoForm .form-control {
+  height: auto;
+}
+.header-logo {
+  width: 60px;
+}
+/* check */
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  color: lightgrey;
+}
+
+#progressbar .active {
+  color: #673ab7;
+}
+
+#progressbar li {
+  list-style-type: none;
+  font-size: 15px;
+  width: 25%;
+  float: left;
+  position: relative;
+  font-weight: 400;
+}
+
+/*Icons in the ProgressBar*/
+#progressbar #account:before {
+  font-family: FontAwesome;
+  content: "\f13e";
+}
+
+#progressbar #personal:before {
+  font-family: FontAwesome;
+  content: "\f007";
+}
+
+#progressbar #payment:before {
+  font-family: FontAwesome;
+  content: "\f030";
+}
+
+#progressbar #confirm:before {
+  font-family: FontAwesome;
+  content: "\f00c";
+}
+
+/*Icon ProgressBar before any progress*/
+#progressbar li:before {
+  width: 50px;
+  height: 50px;
+  line-height: 45px;
+  display: block;
+  font-size: 20px;
+  color: #ffffff;
+  background: lightgray;
+  border-radius: 50%;
+  margin: 0 auto 10px auto;
+  padding: 2px;
+}
+
+/*ProgressBar connectors*/
+#progressbar li:after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background: lightgray;
+  position: absolute;
+  left: 0;
+  top: 25px;
+  z-index: -1;
+}
+
+/*Color number of the step and the connector before it*/
+#progressbar li.active:before,
+#progressbar li.active:after {
+  background: #673ab7;
+}
+
+/*Animated Progress Bar*/
+.progress {
+  height: 20px;
+}
+
+.progress-bar {
+  background-color: #673ab7;
+}
+
+.bar {
+  height: fit-content;
+  background: white;
+  padding: 3px;
+  width: 100%;
+  margin: 0px 30px;
+  border-radius: 100px;
+  transition: all ease-in-out 0.5s;
+}
+.greenBars {
+  background: #3cb878 !important;
+}
+/* scroll */
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+.demo-side-panel {
+  border-bottom: 15px solid #3bb6fb;
+  border-radius: 10px;
+}
+/**
+ * ==============================================
+ * Dot Windmill
+ * ==============================================
+ */
+.dot-windmill {
+  position: relative;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #3bb6fb;
+  color: #3bb6fb;
+  transform-origin: 5px 15px;
+  animation: dot-windmill 2s infinite linear;
+}
+.dot-windmill::before,
+.dot-windmill::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+}
+.dot-windmill::before {
+  left: -8.66254px;
+  top: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #3bb6fb;
+  color: #3bb6fb;
+}
+.dot-windmill::after {
+  left: 8.66254px;
+  top: 15px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #3bb6fb;
+  color: #3bb6fb;
+}
+
+@keyframes dot-windmill {
+  0% {
+    transform: rotateZ(0deg) translate3d(0, 0, 0);
+  }
+  100% {
+    transform: rotateZ(720deg) translate3d(0, 0, 0);
+  }
+}
+
+.modal {
+  opacity: 1 !important;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 1000px !important;
+}
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .show > .nav-link {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.btn-primary {
+  background-color: #3bb6fb;
+  border-color: #34b9fd;
+}
+
+.navbar-expand-lg .navbar-nav {
+  column-gap: 25px;
+}
+.composer-parent {
+  height: calc(100vh - 86px);
+}
+.email-editor {
+  height: calc(100% - 30px);
+}
+.email-editor #editor-1 {
+  height: calc(100vh - 122px);
+}
+.sc-gUAEMC a {
+  display: none;
+}
