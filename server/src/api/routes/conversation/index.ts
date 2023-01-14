@@ -1,9 +1,16 @@
 import { Router } from "express";
 import * as conversationController from "../../controller/conversation";
+import chatRouter from "./chat";
+import messageRouter from "./message";
 
 const conversationRouter = Router();
 
-conversationRouter.post("/", conversationController.sendMail);
+// Email
+conversationRouter.post("/email", conversationController.sendMail);
 conversationRouter.post("/sendgrid/email", conversationController.gridMailSend);
+//Chat
+conversationRouter.use("/chat", chatRouter);
+// Message
+conversationRouter.use("/message", messageRouter);
 
 export default conversationRouter;

@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import nodemailer from "nodemailer";
 import SendGridMail from "@sendgrid/mail";
 
+
+// Email
 export const sendMail = async (req: Request, res: Response) => {
     try {
         var transport = nodemailer.createTransport({
@@ -79,3 +81,4 @@ export const gridMailSend = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Something went wrong", error: error });
     }
 }
+

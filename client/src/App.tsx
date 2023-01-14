@@ -19,10 +19,10 @@ import {
 } from "react-router-dom";
 import About from "./components/About";
 import Dashboard from "./components/Dashboard";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Composer from "./allPages/composer";
-
+import Chat from "./allPages/chat";
 
 const App = () => {
   const classes = useStyles();
@@ -41,15 +41,19 @@ const App = () => {
       <Router>
         <div className="main">
           <Navbar />
+          <div className="blur" style={{ top: "-18%", right: "0" }}></div>
+          <div className="blur" style={{ top: "36%", left: "-8rem" }}></div>
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/mail-templates" element={<Composer />} />
             <Route path="/about" element={<About />} />
             <Route path="/demo" element={<Demo />} />
+            <Route path="/chat" element={<Chat />} />
           </Routes>
         </div>
       </Router>
-      <ToastContainer/>
+
+      <ToastContainer />
     </>
     // <Demo/>
     // <Container maxWidth="lg">

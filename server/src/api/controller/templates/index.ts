@@ -18,7 +18,15 @@ export const saveDesign = async (req: Request, res: Response) => {
 
 export const getDesign = async (req: Request, res: Response) => {
     try {
-        fs.readFile(path.resolve(__dirname, "../../../../public/design.json"), "utf-8", (err, jsonString) => {
+        const { name } = req.query;
+        console.log("name is :", name);
+        let fileName: string;
+        if (name === "" || name === undefined) {
+            fileName = "emptyDesign.json"
+        } else {
+            fileName = `${name}.json`
+        }
+        fs.readFile(path.resolve(__dirname, `../../../../public/${fileName}`), "utf-8", (err, jsonString) => {
             if (err) {
                 console.log("Error reading jsonDesign", err);
                 return;

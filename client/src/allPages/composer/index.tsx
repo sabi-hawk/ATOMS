@@ -9,7 +9,7 @@ import EmailEditor, {
 import fs from "fs";
 
 function Composer() {
-  const emailEditorRef = useRef(null);
+  const emailEditorRef: any = useRef(null);
 
   const exportHtml = async () => {
     // @ts-ignore
@@ -42,9 +42,8 @@ function Composer() {
           htmlContent: html,
         }
       );
-      console.log("data", response.data)
+      console.log("data", response.data);
     });
-    
   };
   const onLoad = async () => {
     const { data } = await axios.get(
@@ -53,26 +52,31 @@ function Composer() {
     console.log("DESIGN ON LOAD", data.design);
     // @ts-ignore
     emailEditorRef.current.editor.loadDesign(data.design);
-    // fs.readFile("./design.json", "utf-8", (err, jsonString) => {
-    //   if (err) {
-    //     console.log("Error reading jsonDesign", err);
-    //     return;
-    //   }
-    //   try {
-    //     const jsonDesign = JSON.parse(jsonString);
-    //     //@ts-ignore
-    //     emailEditorRef.current.editor.loadDesign(jsonDesign);
-    //   } catch (err) {
-    //     console.log("Error parsing JSON string:", err);
-    //   }
-    // });
-
-    // editor instance is created
-    // you can load your template here;
-    // const templateJson = {};
-    // emailEditorRef.current.editor.loadDesign(templateJson);
   };
 
+  const loadDesign = async (event: any, name: string) => {
+    event.preventDefault();
+    const { data } = await axios.get(
+      `http://localhost:3001/api/templates/design?name=${name}`
+    );
+    emailEditorRef.current.editor.loadDesign(data.design);
+  };
+  const emptyEditor = async () => {
+    const { data } = await axios.get(
+      "http://localhost:3001/api/templates/design?empty=1"
+    );
+    console.log("DESIGN ON LOAD", data.design);
+    // @ts-ignore
+    emailEditorRef.current.editor.loadDesign(data.design);
+  };
+  const loadDefault = async () => {
+    const { data } = await axios.get(
+      "http://localhost:3001/api/templates/design?empty=0&name=default_1"
+    );
+    console.log("DESIGN ON LOAD", data.design);
+    // @ts-ignore
+    emailEditorRef.current.editor.loadDesign(data.design);
+  };
   const onReady = async () => {
     // editor is ready
     // @ts-ignore
@@ -133,7 +137,7 @@ function Composer() {
         htmlContent: html,
       }
     );
-    console.log("data")
+    console.log("data");
   };
   return (
     <div className="composer-parent">
@@ -143,6 +147,20 @@ function Composer() {
         </button>
         <button id="btn-export" className="" onClick={exportHtmlA}>
           Send Mail
+        </button>
+        <button
+          id="btn-export"
+          className=""
+          onClick={(event) => loadDesign(event, "")}
+        >
+          Empty Editor
+        </button>
+        <button
+          id="btn-export"
+          className=""
+          onClick={(event) => loadDesign(event, "default_1")}
+        >
+          Load Default_1
         </button>
       </div>
       <div className="email-editor">
