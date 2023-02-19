@@ -4,7 +4,8 @@ import * as userController from "../../controller/user";
 
 const userRouter = Router();
 
-userRouter.use("/", auth, userController.getUser);
+// userRouter.use("/", auth, userController.getUser);
+userRouter.get("/:userId", userController.getUserData)
 
 export default userRouter;
 

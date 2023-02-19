@@ -114,3 +114,27 @@ export const findChat = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Something went wrong", error: error });
     }
 }
+
+export const getChat = async (req: Request, res: Response) => {
+    console.log("inside get chat", req.params.chatId)
+    try {
+        console.log("inside get chat", req.params.chatId)
+        const chat = await Chat.findOne({_id: req.params.chatId})
+        res.status(200).json(chat);
+    } catch (error) {
+        console.log("Error | controller | conversation | chat | findChat | catch", error)
+        res.status(500).json({ message: "Something went wrong", error: error });
+    }
+}
+
+export const getChatMessages = async (req: Request, res: Response) => {
+    console.log("inside get chat", req.params.chatId)
+    try {
+        console.log("inside get chat", req.params.chatId)
+        const chat = await Chat.findOne({_id: req.params.chatId})
+        res.status(200).json(chat?.messages);
+    } catch (error) {
+        console.log("Error | controller | conversation | chat | findChat | catch", error)
+        res.status(500).json({ message: "Something went wrong", error: error });
+    }
+}

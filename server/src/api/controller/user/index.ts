@@ -14,3 +14,18 @@ export const getUser = async (req: Request, res: Response) => {
         return  res.status(500).json({ message: "Something went wrong", error: error });
     }
 }
+
+export const getUserData = async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.params;
+
+        let user = await User.findOne({ _id: userId });
+        if (user) {
+            return res.status(200).json({name: user.name, email: user.email});
+        }
+        return res.status(404).json({ message: "User not found" })
+    } catch (error) {
+        console.log("Error | controller | user | getUser | catch", error)
+        return  res.status(500).json({ message: "Something went wrong", error: error });
+    }
+}
