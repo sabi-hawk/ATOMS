@@ -11,7 +11,7 @@ export const getPost = (req: Request, res:Response) => {
 export const createPost = async (req: Request, res: Response) => {
     const post = req.body;
     const newPost = new PostMessage(post);
-    console.log("INSIDE POST CREATION BACK", post, "\n\n\n", newPost);
+    // console.log("INSIDE POST CREATION BACK", post, "\n\n\n", newPost);
     try {
         await newPost.save();
         // @ts-ignore

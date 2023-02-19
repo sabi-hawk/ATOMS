@@ -8,7 +8,7 @@ export const extractEmails = async (req: Request, res: Response) => {
     const { query } = req.body;
     const { numOfEmails, numOfPages, search }: any = req.query;
 
-    console.log("extractEmails Request", query, search, numOfEmails, numOfPages, req.body)
+    // console.log("extractEmails Request", query, search, numOfEmails, numOfPages, req.body)
     try {
         const process = spawn('python', [path.resolve(__dirname,
             '../../python/extras/AVS/requesting.py'), search, numOfEmails, numOfPages])

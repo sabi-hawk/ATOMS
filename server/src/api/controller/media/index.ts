@@ -6,7 +6,7 @@ import _ from "lodash";
 
 export const upload = async (req: Request, res: Response) => {
     try {
-        console.log("FINAL TEST", req)
+        // console.log("FINAL TEST", req)
         if (req.files === undefined) {
             return res.status(400).send({ message: "Upload a file please!" });
         }

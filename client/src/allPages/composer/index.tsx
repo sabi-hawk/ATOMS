@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EmailEditor, {
   FileInfo,
   FileUploadDoneCallback,
@@ -7,25 +7,62 @@ import EmailEditor, {
   HtmlOptions,
 } from "react-email-editor";
 import fs from "fs";
+import {
+  getDesign,
+  getTemplatesNames,
+  saveTemplate,
+} from "../../api/templates";
+import { useSelector } from "react-redux";
+import { AtomState } from "../../flux/store";
 
 function Composer() {
+  const {
+    auth: {
+      user: { _id, token },
+    },
+  } = useSelector((state: AtomState) => state);
+  const [designNames, setDesignNames] = useState([]);
+
   const emailEditorRef: any = useRef(null);
 
+  const handleSelectChange = async (event: any) => {
+    try {
+      const { data } = await getDesign(event.target.value, token);
+      emailEditorRef.current.editor.loadDesign(data.design);
+    } catch (err) {
+      console.log("Error | Composer | handleSelectChange", err);
+    }
+  };
+  useEffect(() => {
+    const getTemplateNames = async () => {
+      try {
+        const { data } = await getTemplatesNames(_id, token);
+        setDesignNames(data.files);
+        console.log('FOUND TEMPLATE NAMES', data.files)
+      } catch (err) {
+        console.log("Error | Composer | getDesigns", err);
+      }
+    };
+    getTemplateNames();
+  }, []);
   const exportHtml = async () => {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
       console.log("DESIGN ON EXPORT", data.design);
-      const response = await axios.post(
-        "http://localhost:3001/api/templates/save",
-        {
-          design: design,
-        }
-      );
-      // fs.writeFile("./design.json", JSON.stringify(design), (err) => {
-      //   console.log("Error writing design JSON", err);
-      // });
-      console.log("export html", html, design);
+      try {
+        const { data } = await saveTemplate(_id, token, design);
+        console.log("Design Saved", data);
+      } catch (err) {
+        console.log("Error | Composer | ExportHTML", err);
+      }
+      // const response = await axios.post(
+      //   "http://localhost:3001/api/templates/save",
+      //   {
+      //     design: design,
+      //   }
+      // );
+      // console.log("export html", html, design);
     });
   };
   const exportHtmlA = async () => {
@@ -111,11 +148,8 @@ function Composer() {
     document.getElementById("btn-export")?.classList.remove("d-none");
     console.log("onReady");
   };
-  // const saveDesign = () => {
-  //   emailEditorRef.current.editor.saveDesign((design) => {});
-  // };
+
   const sendMail = async () => {
-    // @ts-ignore
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
@@ -123,11 +157,6 @@ function Composer() {
       console.log("export html", html, design);
     });
     const html = "";
-    // const html: string = emailEditorRef?.current?.editor?.exportHtml(
-    //   async (data: HtmlExport) => {
-    //     return data.html;
-    //   }
-    // );
     const { data } = await axios.post(
       "http://localhost:3001/api/conversation",
       {
@@ -162,6 +191,12 @@ function Composer() {
         >
           Load Default_1
         </button>
+        <select onChange={handleSelectChange}>
+          <option value=""> Choose Template</option>
+          {designNames.map((name, index) => (
+            <option value={name}>{`Design_${index + 1}`} </option>
+          ))}
+        </select>
       </div>
       <div className="email-editor">
         <EmailEditor ref={emailEditorRef} onLoad={onLoad} onReady={onReady} />

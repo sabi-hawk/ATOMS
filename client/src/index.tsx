@@ -5,12 +5,19 @@ import { Provider } from "react-redux";
 import { applyMiddleware, compose } from "redux";
 import { configureStore } from "@reduxjs/toolkit";
 import StateProvider from "./providers/stateProvider";
+import { PersistGate } from "redux-persist/integration/react";
 import "./style.css";
+import { persister } from "./flux/store";
+import { BrowserRouter } from "react-router-dom";
 // @ts-ignore
 const appRoot = ReactDOM.createRoot(document.getElementById("root"));
 
 appRoot.render(
   <StateProvider>
-    <App />
+    <PersistGate persistor={persister}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PersistGate>
   </StateProvider>
 );

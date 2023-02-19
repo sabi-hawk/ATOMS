@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { userChats } from "../../api/conversation";
@@ -10,41 +10,90 @@ import Comment from "../../images/comment.png";
 import { UilSetting } from "@iconscout/react-unicons";
 import ChatBox from "../../components/ChatBox";
 import { io } from "socket.io-client";
+import { AtomState } from "../../flux/store";
+// import useActions from "../../hooks";
+import ErrorComponent from "../../utils";
+import { AxiosError } from "axios";
+import { setUser } from "../../flux/reducers/auth";
 // import { Socket } from "dgram";
 
-const Chat = () => {
-  const user = {
-    id: "63c03518077d70ab9ca19a1c",
-  };
+function Chat() {
+  // const { EmptyAppState } = useActions();
+  const user = useSelector((state: AtomState) => state?.auth?.user);
+  if (!user) {
+    console.log("user doesn't exists in chat");
+  }
+  // const user = useMemo(
+  //   () => ({
+  //     id: "63c03518077d70ab9ca19a1c",
+  //   }),
+  //   []
+  // );
+  // const user = {
+  //   id: "63c03518077d70ab9ca19a1c",
+  // };
   // const { user } = useSelector((state: any) => state.user);
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
-  const socket = useRef<any>();
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [sendMessage, setSendMessage] = useState(null);
+  const [receiveMessage, setReceiveMessage] = useState(null);
 
   const dispatch = useDispatch();
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const socket = useRef<any>();
+
+  // initializing socket
   useEffect(() => {
-    //@ts-ignore
     socket.current = io("http://localhost:3002");
-    socket?.current?.emit("new-user-add", user.id);
+    socket?.current?.emit("new-user-add", user._id);
     socket.current.on("get-users", (users: any) => {
       setOnlineUsers(users);
+      console.log(onlineUsers);
     });
-  }, []); // [user]
+  }, [user]); // [user]
+
+  // send message to the socket server
   useEffect(() => {
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
+  }, [sendMessage]);
+
+  // receive message from socket server
+  useEffect(() => {
+    socket?.current?.on("receive-message", (data: any) => {
+      setReceiveMessage(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("inside getting chat ");
     const getChats = async () => {
       try {
-        const { data } = await userChats(user.id);
+        const { data } = await userChats(user._id, user.token);
 
         dispatch(setChatsData(data));
         setChats(data);
         console.log("Chats", chats);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          dispatch(setUser({}));
+          dispatch(setChatsData({}));
+        }
         console.log("Error | Pages | Chat", error);
       }
     };
     getChats();
-  }, []); //[user]
+  }, [user]); //[user]
+
+  const checkOnlineStatus = (chat: any) => {
+    const chatMember = chat.members.find((member: any) => member !== user._id);
+    const online = onlineUsers.find((user: any) => user.userId === chatMember);
+    return online ? true : false;
+  };
+  // const handleSetCurrentChat = ({ event, chat }) => {
+  //   setCurrentChat(chat);
+  // };
   return (
     <div className="chat">
       <div className="left-side-chat">
@@ -53,7 +102,11 @@ const Chat = () => {
           <div className="chat-list">
             {chats.map((chat, key) => (
               <div key={key} onClick={() => setCurrentChat(chat)}>
-                <Conversation data={chat} currentUserId={user.id} />
+                <Conversation
+                  data={chat}
+                  currentUserId={user._id}
+                  online={checkOnlineStatus(chat)}
+                />
               </div>
             ))}
           </div>
@@ -71,11 +124,15 @@ const Chat = () => {
               <img src={Comment} alt="" />
             </Link>
           </div> */}
-          <ChatBox chat={currentChat} currentUser={user.id} />
+          <ChatBox
+            chat={currentChat}
+            setSendMessage={setSendMessage}
+            receiveMessage={receiveMessage}
+          />
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Chat;

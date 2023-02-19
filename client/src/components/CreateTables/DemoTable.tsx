@@ -1,8 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { AtomState } from "../../flux/store";
 
 function DemoTable() {
-  const scrappedData = useSelector((state: any) => state.scrappedData);
+  const scrappedData = useSelector((state: AtomState) => state.scrappedData);
   return (
     <div className="table-main w-100">
       <table className="table table-bordered bg-white position-relative w-100 mb-0">
@@ -60,6 +61,7 @@ function DemoTable() {
             <td>obj.email</td>
           </tr> */}
 
+          {/* @ts-ignore */}
           {scrappedData?.emailRecords?.data.map((obj: any, index: Number) => {
             return (
               <tr key={index.toString()}>

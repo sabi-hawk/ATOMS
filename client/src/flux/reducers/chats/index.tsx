@@ -11,7 +11,11 @@ const chats = createSlice({
   initialState,
   reducers: {
     setChatsData: (state = initialState, action) => {
-      state.chats = action.payload;
+      if(Object.keys(action.payload).length !== 0) {
+        return { ...state, chats: action.payload };
+      }
+      return action.payload
+      // state.chats = action.payload;
     },
   },
 });

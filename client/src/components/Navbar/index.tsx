@@ -1,10 +1,24 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo.svg";
-
+//
+import { setUser } from "../../flux/reducers/auth";
+import { setChatsData } from "../../flux/reducers/chats";
+import { logout } from "../../flux/reducers";
+import useActions from "../../hooks";
+import { useNavigate } from "react-router-dom";
+import ProfileModal from "../UserProfile";
 function Navbar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(setUser({}));
+    dispatch(setChatsData({}));
+    navigate("/");
+  };
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light app-nav">
       <a className="navbar-brand" href="/">
         <img className="header-logo" src={logo} alt="Logo" />
       </a>
@@ -61,7 +75,6 @@ function Navbar() {
               About
             </Link>
           </li>
-          
         </ul>
         <form className="form-inline my-2 my-lg-0">
           <input
@@ -70,13 +83,21 @@ function Navbar() {
             placeholder="Search"
             aria-label="Search"
           />
-          <button
-            className="btn btn-primary my-2 my-sm-0"
-            type="submit"
-          >
+          <button className="btn btn-primary my-2 my-sm-0" type="submit">
             Search
           </button>
         </form>
+        <button
+          className="btn btn-primary my-2 my-sm-0"
+          type="button"
+          onClick={handleLogout}
+        >
+          {" "}
+          logout
+        </button>
+      </div>
+      <div>
+        <ProfileModal />
       </div>
     </nav>
   );

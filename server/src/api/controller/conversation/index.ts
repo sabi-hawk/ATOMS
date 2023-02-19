@@ -44,7 +44,7 @@ export const sendMail = async (req: Request, res: Response) => {
             res.status(422).json({ error: "text or html-content is required", message: "Validation error" });
         }
 
-        console.log("Before Transport", mailOptions);
+        // console.log("Before Transport", mailOptions);
         transport.sendMail(mailOptions, function (err, info) {
             if (err) {
                 console.log(err)

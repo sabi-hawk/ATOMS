@@ -38,8 +38,7 @@ const socket = new Server(server, {
 
 let activeUsers: Array<socketUser> = [];
 socket.on('connection', (client) => {
-  console.log('a user connected');
-
+  // console.log('a user connected');
   client.on('new-user-add', (newUserId) => {
     if (!activeUsers.some((user: socketUser) => user.userId === newUserId)) {
       activeUsers.push({
@@ -50,23 +49,31 @@ socket.on('connection', (client) => {
     console.log("Connected Users", activeUsers);
     socket.emit('get-users', activeUsers);
   })
+
+  client.on('send-message', (data: any) => {
+    const { receiverId } = data;
+    const user = activeUsers.find((user) => user.socketId !== client.id)
+    console.log("sending from socket to receiver Id ")
+    console.log("Data", data);
+    if (user) {
+      socket.to(user.socketId).emit("receive-message", data)
+    }
+  })
+
   client.on('disconnected', () => {
     activeUsers = activeUsers.filter((user: socketUser) => user.socketId !== client.id)
     console.log('user disconnected', activeUsers);
     socket.emit('get-users', activeUsers);
   })
 
-  client.on('chat message', (message: string) => {
-    console.log(`message: ${message}`);
-    socket.emit('chat message', message);
-  })
+
 })
 // socket end
 app.use((req, res, next) => {
-  // console.log(`HTTP Method - ${req.method} , URL - ${req.url}`);
+  console.log(`HTTP Method - ${req.method} , URL - ${req.url}`);
   next();
 })
-console.log("Here is path:", path.join(__dirname, '../../public'))
+// console.log("Here is path:", path.join(__dirname, '../../public'))
 
 app.use("/images", express.static(path.join(__dirname, '../../public')))
 
@@ -80,7 +87,7 @@ app.use("/api", apiRouter);
 server.listen(3002, () =>
   console.log(`Socket running on port: 3002`)
 )
-console.log("ENV:", process.env.MONGODB_URI);
+// console.log("ENV:", process.env.MONGODB_URI);
 mongoose.set("strictQuery", false);
 mongoose
   // @ts-ignore

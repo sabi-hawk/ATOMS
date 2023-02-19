@@ -1,21 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { getMessages } from "../../api/conversation";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
+import { getMessages, sendMessage } from "../../api/conversation";
 import { getUser } from "../../api/user";
 import { prettifyName } from "../../hooks/formating";
 import { format } from "timeago.js";
 import InputEmoji from "react-input-emoji";
+import { useSelector } from "react-redux";
+import user from "../../flux/reducers/auth";
+import { AtomState } from "../../flux/store";
 
-const ChatBox = ({ chat, currentUser }: any) => {
+const ChatBox = ({
+  chat, // there was also currentUser
+  setSendMessage,
+  receiveMessage,
+}: any) => {
+  // const {
+  //   user: { userId, userName },
+  //   chats: { chatId }
+  // } = useSelector((state: AtomState) => state);
+
+  const currentUser = useSelector((state: AtomState) => state?.auth.user?._id);
   const [userData, setUserData] = useState<any>(null);
   const [messages, setMessages] = useState<any>([]);
   const [newMessage, setNewMessage] = useState<any>("");
-
+  const user = useSelector((state: AtomState) => state?.auth?.user);
+  const scroll = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // also added && receiveMessage.chatId === chat._id
+    if (receiveMessage !== null) {
+      console.log("Data received in Child ChatBox");
+      setMessages([...messages, receiveMessage]);
+    }
+  }, [receiveMessage]);
   //   fetching data for header
   useEffect(() => {
     const userId = chat?.members?.find((id: string) => id !== currentUser);
     const getUserData = async () => {
       try {
-        const { data } = await getUser(userId);
+        const { data } = await getUser(userId, user.token);
         setUserData(data);
         console.log("found user", data);
       } catch (error) {
@@ -28,9 +49,9 @@ const ChatBox = ({ chat, currentUser }: any) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat._id);
+        const { data } = await getMessages(chat._id, user.token);
         setMessages(data);
-        console.log("Found Messages");
+        console.log("Found Messages", data);
       } catch (error) {
         console.log("Error | Chat | ChatBox | getMessages", error);
       }
@@ -40,7 +61,31 @@ const ChatBox = ({ chat, currentUser }: any) => {
   const handleChange = (newMessage: string) => {
     setNewMessage(newMessage);
   };
-  const handleSend = () => {};
+  const handleSend = async (e: any) => {
+    e.preventDefault();
+    const message = {
+      senderId: currentUser,
+      text: newMessage,
+    };
+
+    //send message to database
+    try {
+      const { data } = await sendMessage(chat._id, message, user.token);
+      setMessages([...messages, data]);
+      setNewMessage("");
+    } catch (error) {
+      console.log(error);
+    }
+
+    // send message to socket server
+    const receiverId = chat?.members.find((id: string) => id !== currentUser);
+    setSendMessage({ ...message, receiverId });
+  };
+
+  // always scroll to the last message
+  useEffect(() => {
+    scroll.current?.scrollIntoView({behavior: "smooth"})
+  })
   return (
     <>
       <div className="ChatBox-container">
@@ -75,7 +120,7 @@ const ChatBox = ({ chat, currentUser }: any) => {
             <div className="chat-body">
               {messages.map((message: any) => (
                 <>
-                  <div
+                  <div ref = {scroll}
                     className={
                       message.senderId === currentUser
                         ? "message own"
@@ -98,7 +143,9 @@ const ChatBox = ({ chat, currentUser }: any) => {
             </div>
           </>
         ) : (
-          <span className="chatbox-empty-message">Tap on a Chat to start Conversation...</span>
+          <span className="chatbox-empty-message">
+            Tap on a Chat to start Conversation...
+          </span>
         )}
       </div>
     </>
