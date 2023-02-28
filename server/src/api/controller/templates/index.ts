@@ -6,10 +6,10 @@ import path from "path";
 
 export const saveDesign = async (req: Request, res: Response) => {
     try {
-        const fileName = `${req.params.userId}_${Date.now()}`
+        const fileName = `${req.params.userId}_${Date.now()}.${req.params.name}`
         // console.log("here Saving design");
         fs.writeFileSync(path.resolve(__dirname, `../../../../public/templates/${fileName}.json`), JSON.stringify(req.body.design));
-        return res.status(200).json({ message: "Design Saved Successfully" });
+        return res.status(200).json({ message: "Design Saved Successfully!" });
     } catch (error) {
         console.log("Error | controller | templates | saveDesign | catch", error)
         return res.status(500).json({ message: "Something went wrong", error: error });

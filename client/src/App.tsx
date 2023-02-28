@@ -38,8 +38,6 @@ const App = () => {
         <>
           <div className="main">
             <Navbar />
-            <div className="blur" style={{ top: "-18%", right: "0" }}></div>
-            <div className="blur" style={{ top: "36%", left: "-8rem" }}></div>
             <Routes>
               <Route
                 path="/"
@@ -73,6 +71,7 @@ const App = () => {
                 path="/chat"
                 element={user ? <Chat /> : <Navigate to="../auth" />}
               />
+              <Route path="*" element={user ? <Navigate to="../dashboard"/> : <Navigate to="../auth"/>}/>
             </Routes>
           </div>
 
@@ -86,10 +85,15 @@ const App = () => {
       <>
         <div className="main">
           <Navbar />
-          <div className="blur" style={{ top: "-18%", right: "0" }}></div>
-          <div className="blur" style={{ top: "36%", left: "-8rem" }}></div>
           <Routes>
-            <Route path="/chat" element={<Chat />} />
+            <Route
+              path="/chat"
+              element={user ? <Chat /> : <Navigate to="/auth" />}
+            />
+            <Route
+              path="*"
+              element={user ? <Navigate to="../chat"  /> : <Navigate to="../auth" />}
+            />
           </Routes>
         </div>
 
@@ -101,9 +105,7 @@ const App = () => {
   return (
     <>
       <div className="main">
-        <Navbar />
-        <div className="blur" style={{ top: "-18%", right: "0" }}></div>
-        <div className="blur" style={{ top: "36%", left: "-8rem" }}></div>
+        {/* <Navbar /> */}
         <Routes>
           <Route path="/" element={<Navigate to="/auth" replace />} />
           <Route path="/auth" element={<Authentication />} />
@@ -111,9 +113,9 @@ const App = () => {
             path="/provider/:provider_id/chat"
             element={<ClientAuthentication />}
           />
+          <Route path="*" element={<Navigate to="../auth" />} />
         </Routes>
       </div>
-
       <ToastContainer />
     </>
   );

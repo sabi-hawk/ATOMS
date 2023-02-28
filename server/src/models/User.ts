@@ -9,7 +9,8 @@ const UserSchema = new Schema({
     email: { type: String, trim: true, lowercase: true, required: true },
     password: { type: String, required: true },
     country: { type: String, },
-    isClient: { type: Boolean, required: true, default: false }
+    isClient: { type: Boolean, required: true, default: false },
+    tags: { type: Array, default: [] }
 })
 
 export default mongoose.model("User", UserSchema);

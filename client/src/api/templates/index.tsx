@@ -6,9 +6,14 @@ export const getTemplatesNames = (userId: string, token: string) =>
       "auth-token": token,
     },
   });
-export const saveTemplate = (userId: string, token: string, design: any) =>
+export const saveTemplate = (
+  userId: string,
+  token: string,
+  design: any,
+  designName: string
+) =>
   API.post(
-    `/templates/user/${userId}/save`,
+    `/templates/user/${userId}/save/${designName}`,
     {
       design: design,
     },

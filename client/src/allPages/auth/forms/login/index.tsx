@@ -5,6 +5,7 @@ import { userLogin } from "../../../../api/auth";
 import { setUser } from "../../../../flux/reducers/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AxiosError } from "axios";
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -37,10 +38,16 @@ function Login() {
       // } else {
       //   console.log("invalid credentials");
       // }
-    } catch (error) {
-      toast.error("Invalid Credentials", {
-        autoClose: 3000,
-      });
+    } catch (error: any) {
+      if (error.response.data.message) {
+        toast.error(error.response.data.message, {
+          autoClose: 3000,
+        });
+      } else {
+        toast.error("Something Went Wrong. Try Again!", {
+          autoClose: 3000,
+        });
+      }
       console.log(error);
     }
   };

@@ -1,0 +1,25 @@
+.template-controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 6px;
+  margin: 0.25rem;
+}
+
+.email-editor {
+  height: calc(100% - 30px);
+  border-top: 1px solid #bcbcbd;
+}
+/* .email-editor #editor-1 {
+  height: calc(100vh - 122px);
+} */
+.email-editor div:first-child {
+  height: calc(100vh - 134px);
+}
+
+/* .template-controls select {
+  border: 1px solid #9f97d5;
+  background-color: #9f97d5;
+  border-radius: 5px;
+  color: #fff;
+  text-align: center;
+} */

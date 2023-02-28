@@ -1,3 +1,39 @@
 .app-nav {
   border-bottom: 1px solid #80808080;
 }
+.btn-user-avatar {
+  background: #fff !important;
+  border-color: #fff !important;
+}
+.btn-user-avatar img{
+  width: 50px;
+}
+
+.avatar-main{
+  width: 200px;
+  justify-content: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avatar-main p{
+  margin-bottom: 0;
+}
+.avatar-main .avatar-btn{
+  border:none;
+  outline: none;
+  background-color: transparent;
+}
+.avatar-main img {
+width: 100%;
+max-width: 50px;
+}
+
+.user-model-tags {
+  max-width: 800px;
+}
+
+.custom-user-tags{
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}

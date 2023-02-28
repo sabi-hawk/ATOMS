@@ -3,6 +3,7 @@ import scrappedDataReducer from "./scrappedData";
 import searchInfoReducer from "./searchData";
 import chatReducer from "./chats";
 import authReducer from "./auth";
+import extrasReducer from "./extras";
 import storage from "redux-persist/lib/storage";
 import { AtomState } from "../store";
 
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
   search: searchInfoReducer,
   chats: chatReducer,
   auth: authReducer,
+  extras: extrasReducer,
 });
 
 // const rootReducer = (state: AtomState, action: any) => {

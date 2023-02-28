@@ -274,7 +274,7 @@ table {
     transform: rotateZ(720deg) translate3d(0, 0, 0);
   }
 }
-
+/* 
 .modal {
   opacity: 1 !important;
   display: flex;
@@ -285,7 +285,7 @@ table {
 .modal-dialog {
   width: 100%;
   max-width: 1000px !important;
-}
+} */
 
 .navbar-light .navbar-nav .active > .nav-link,
 .navbar-light .navbar-nav .nav-link.active,
@@ -306,12 +306,7 @@ table {
 .composer-parent {
   height: calc(100vh - 86px);
 }
-.email-editor {
-  height: calc(100% - 30px);
-}
-.email-editor #editor-1 {
-  height: calc(100vh - 122px);
-}
+
 .sc-gUAEMC a {
   display: none;
 }
@@ -343,13 +338,12 @@ table {
   min-height: 80vh;
   /* overflow: scroll; */
   overflow: auto;
-  height: 100%;
+  height: calc(100vh - 150px);
 }
 
 .chat-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .right-side-chat {
@@ -453,7 +447,9 @@ table {
   background: var(--cardColor);
   border-radius: 1rem;
   display: grid;
-  grid-template-rows: 14vh 60vh 13vh;
+  /* grid-template-rows: 14vh 60vh 13vh; */
+  height: calc(100vh - 150px);
+  position: relative;
 }
 
 .chat-header {
@@ -469,6 +465,7 @@ table {
   padding: 1.5rem;
   /* overflow: scroll; */
   overflow: auto;
+  height: calc(100% - 55px);
 }
 
 .message {
@@ -508,6 +505,8 @@ background: linear-gradient(98.63deg, #24e4f0 0%, #358ff9 100%);
   padding: 0.8rem;
   border-radius: 1rem;
   align-self: end;
+  position: absolute;
+  width: 100%;
 }
 .chat-sender>input{
   height: 70%;

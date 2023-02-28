@@ -12,8 +12,12 @@ import {
   getTemplatesNames,
   saveTemplate,
 } from "../../api/templates";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AtomState } from "../../flux/store";
+import FunctionalBar from "./functionalBar";
+import "./index.css";
+import { toast } from "react-toastify";
+import { setTemplates } from "../../flux/reducers/extras";
 
 function Composer() {
   const {
@@ -22,8 +26,8 @@ function Composer() {
     },
   } = useSelector((state: AtomState) => state);
   const [designNames, setDesignNames] = useState([]);
-
   const emailEditorRef: any = useRef(null);
+  const dispatch = useDispatch();
 
   const handleSelectChange = async (event: any) => {
     try {
@@ -38,31 +42,32 @@ function Composer() {
       try {
         const { data } = await getTemplatesNames(_id, token);
         setDesignNames(data.files);
-        console.log('FOUND TEMPLATE NAMES', data.files)
+        dispatch(setTemplates(data.files));
+        console.log("FOUND TEMPLATE NAMES", data.files);
       } catch (err) {
         console.log("Error | Composer | getDesigns", err);
       }
     };
     getTemplateNames();
   }, []);
-  const exportHtml = async () => {
+  const exportHtml = async (designName: string) => {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
       console.log("DESIGN ON EXPORT", data.design);
       try {
-        const { data } = await saveTemplate(_id, token, design);
+        const { data } = await saveTemplate(_id, token, design, designName);
+        //
+        const { data: namesList } = await getTemplatesNames(_id, token);
+        setDesignNames(namesList.files);
+        dispatch(setTemplates(namesList.files));
+        toast.success(data.message, {
+          autoClose: 3000,
+        });
         console.log("Design Saved", data);
       } catch (err) {
         console.log("Error | Composer | ExportHTML", err);
       }
-      // const response = await axios.post(
-      //   "http://localhost:3001/api/templates/save",
-      //   {
-      //     design: design,
-      //   }
-      // );
-      // console.log("export html", html, design);
     });
   };
   const exportHtmlA = async () => {
@@ -170,34 +175,11 @@ function Composer() {
   };
   return (
     <div className="composer-parent">
-      <div>
-        <button id="btn-export" className="d-none" onClick={exportHtml}>
-          Export HTML
-        </button>
-        <button id="btn-export" className="" onClick={exportHtmlA}>
-          Send Mail
-        </button>
-        <button
-          id="btn-export"
-          className=""
-          onClick={(event) => loadDesign(event, "")}
-        >
-          Empty Editor
-        </button>
-        <button
-          id="btn-export"
-          className=""
-          onClick={(event) => loadDesign(event, "default_1")}
-        >
-          Load Default_1
-        </button>
-        <select onChange={handleSelectChange}>
-          <option value=""> Choose Template</option>
-          {designNames.map((name, index) => (
-            <option value={name}>{`Design_${index + 1}`} </option>
-          ))}
-        </select>
-      </div>
+      <FunctionalBar
+        exportHtml={exportHtml}
+        loadDesign={loadDesign}
+        handleSelectChange={handleSelectChange}
+      />
       <div className="email-editor">
         <EmailEditor ref={emailEditorRef} onLoad={onLoad} onReady={onReady} />
       </div>

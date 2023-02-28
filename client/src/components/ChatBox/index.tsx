@@ -84,8 +84,8 @@ const ChatBox = ({
 
   // always scroll to the last message
   useEffect(() => {
-    scroll.current?.scrollIntoView({behavior: "smooth"})
-  })
+    scroll.current?.scrollIntoView({ behavior: "smooth" });
+  });
   return (
     <>
       <div className="ChatBox-container">
@@ -114,13 +114,19 @@ const ChatBox = ({
                   </div>
                 </div>
               </div>
-              <hr style={{ width: "85%", border: "0.1px solid #ececec" }} />
+              <hr
+                style={{
+                  width: "100%",
+                  border: "1px solid rgb(112, 112, 113)",
+                }}
+              />
             </div>
             {/* ChatBox Messages */}
             <div className="chat-body">
               {messages.map((message: any) => (
                 <>
-                  <div ref = {scroll}
+                  <div
+                    ref={scroll}
                     className={
                       message.senderId === currentUser
                         ? "message own"
@@ -136,7 +142,11 @@ const ChatBox = ({
             {/* chat-sender */}
             <div className="chat-sender">
               <div>+</div>
-              <InputEmoji value={newMessage} onChange={handleChange} />
+                <InputEmoji value={newMessage} onChange={handleChange} onKeyDown={(e: any) => {
+                  if(e.key === 'Enter') {
+                    handleSend(e);
+                  }
+                }}/>
               <div className="send-button button" onClick={handleSend}>
                 Send
               </div>

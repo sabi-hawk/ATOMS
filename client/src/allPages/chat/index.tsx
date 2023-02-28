@@ -95,7 +95,7 @@ function Chat() {
   //   setCurrentChat(chat);
   // };
   return (
-    <div className="chat">
+    <div className="chat p-4">
       <div className="left-side-chat">
         <div className="chat-container">
           <h2>Chats</h2>

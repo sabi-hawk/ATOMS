@@ -51,7 +51,7 @@ const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
           </div>
         </div>
       </div>
-      <hr style={{ width: "85%", border: "0.1px solid #ececec" }} />
+      <hr style={{ width: "100%", border: "1px solid #707071", margin:"10px 0px" }} />
     </>
   );
 };
