@@ -10,8 +10,7 @@
 }
 
 .avatar-main{
-  width: 200px;
-  justify-content: end;
+  justify-content: center;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -36,4 +35,48 @@ max-width: 50px;
 .custom-user-tags{
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
+}
+
+
+.tooltip {
+  position: relative !important;
+  display: inline-block;
+  opacity: 1 !important;
+  z-index: 1 !important;
+
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  left: 60px;
+    top: 18px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+li.nav-item.active svg {
+  stroke: black;
+}
+
+.nav-footer .dropdown-item:hover svg.w-6.h-6 {
+  stroke: black;
+}
+
+a.nav-link:hover {
+  background-color: #eaecf4;
+}
+
+a.nav-link:hover svg {
+  stroke: black;
 }

@@ -7,13 +7,6 @@ import extrasReducer from "./extras";
 import storage from "redux-persist/lib/storage";
 import { AtomState } from "../store";
 
-// const initialState = {
-//   scrappedData: {},
-//   search: {},
-//   chats: {},
-//   auth: {},
-//   _persist: {},
-// };
 const initialState = {};
 
 const rootReducer = (state = initialState, action: any) => {

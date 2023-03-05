@@ -13,6 +13,7 @@ type appUser = {
   country?: string;
   __v: number;
   token: string;
+  tags: Array<any>;
   expiresAt: string;
 };
 type authType = {

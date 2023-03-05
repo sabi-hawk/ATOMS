@@ -76,7 +76,7 @@ const ProfileModal = ({ setOpen }: any) => {
                       type="text"
                       className="form-control"
                       placeholder="Name"
-                      value={prettyName(user.name)}
+                      value={""} // prettyName(user?.name)
                       aria-label="Username"
                       aria-describedby="addon-wrapping"
                     />
@@ -92,12 +92,12 @@ const ProfileModal = ({ setOpen }: any) => {
                       type="text"
                       className="form-control"
                       placeholder="Recipient's Email"
-                      value={user.email.split("@")[0]}
+                      value={user?.email.split("@")[0]}
                       aria-label="Recipient's username"
                       aria-describedby="basic-addon2"
                     ></input>
                     <span className="input-group-text" id="basic-addon2">
-                      {`@${user.email.split("@")[1]}`}
+                      {`@${user?.email.split("@")[1]}`}
                       {/* @example.com */}
                     </span>
                   </div>

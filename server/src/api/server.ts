@@ -54,13 +54,14 @@ socket.on('connection', (client) => {
     const { receiverId } = data;
     const user = activeUsers.find((user) => user.socketId !== client.id)
     console.log("sending from socket to receiver Id ")
-    console.log("Data", data);
+    console.log("Data", data, user);
     if (user) {
       socket.to(user.socketId).emit("receive-message", data)
     }
   })
 
-  client.on('disconnected', () => {
+  client.on('disconnect', () => {
+    console.log("Inside disconnected of socket server");
     activeUsers = activeUsers.filter((user: socketUser) => user.socketId !== client.id)
     console.log('user disconnected', activeUsers);
     socket.emit('get-users', activeUsers);

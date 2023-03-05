@@ -1,0 +1,44 @@
+.tags-p{
+    width: fit-content;
+    padding: 6px 15px;
+    background-color: lightgray ;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submit-dashboard input{
+width: 100%;
+}
+
+.tags-p-main{
+    flex-wrap: wrap;
+}
+
+.email-dashboard-heading{
+    color: black;
+}
+.form-dashboard-main {
+    border: 1px solid #dddddd;
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 10px 3px #dddddd;
+}
+
+.dashboard-custom-row .btn {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-custom-row{
+    display: grid;
+    grid-template-columns: 41.66667% 58.33333%;
+}
+
+.btn-disable{
+    cursor: not-allowed !important;
+    /* pointer-events: none; */
+    opacity: 0.65;
+}

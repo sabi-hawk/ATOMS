@@ -8,7 +8,7 @@ const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
   } = useSelector((state: AtomState) => state);
   return (
     <>
-      <div className="template-controls">
+      <div className="template-controls my-2">
         <select onChange={handleSelectChange} className="btn btn-secondary">
           <option value=""> Choose Template</option>
           {templates?.map((name: string, index) => (
@@ -21,7 +21,7 @@ const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
         </select>
         <div>
           <button
-            className="btn btn-primary"
+            className="btn btn-primary mr-2"
             id="btn-export"
             data-bs-toggle="modal"
             data-bs-target="#nameModal"

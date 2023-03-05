@@ -1,38 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { userChats } from "../../api/conversation";
 import Conversation from "../../components/Conversation";
 import { setChatsData } from "../../flux/reducers/chats";
-import Dashboard from "../../images/home.png";
-import Noti from "../../images/noti.png";
-import Comment from "../../images/comment.png";
-import { UilSetting } from "@iconscout/react-unicons";
 import ChatBox from "../../components/ChatBox";
 import { io } from "socket.io-client";
 import { AtomState } from "../../flux/store";
-// import useActions from "../../hooks";
-import ErrorComponent from "../../utils";
-import { AxiosError } from "axios";
 import { setUser } from "../../flux/reducers/auth";
-// import { Socket } from "dgram";
+import socket from "../../utils/socket";
 
 function Chat() {
-  // const { EmptyAppState } = useActions();
   const user = useSelector((state: AtomState) => state?.auth?.user);
   if (!user) {
     console.log("user doesn't exists in chat");
   }
-  // const user = useMemo(
-  //   () => ({
-  //     id: "63c03518077d70ab9ca19a1c",
-  //   }),
-  //   []
-  // );
-  // const user = {
-  //   id: "63c03518077d70ab9ca19a1c",
-  // };
-  // const { user } = useSelector((state: any) => state.user);
   const [chats, setChats] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -40,28 +21,44 @@ function Chat() {
   const [receiveMessage, setReceiveMessage] = useState(null);
 
   const dispatch = useDispatch();
-  const socket = useRef<any>();
+  // const socket = useRef<any>();
 
   // initializing socket
   useEffect(() => {
-    socket.current = io("http://localhost:3002");
-    socket?.current?.emit("new-user-add", user._id);
-    socket.current.on("get-users", (users: any) => {
+    // socket.current = io("http://localhost:3002");
+    socket.emit("new-user-add", user._id);
+    socket.on("get-users", (users: any) => {
       setOnlineUsers(users);
       console.log(onlineUsers);
     });
   }, [user]); // [user]
 
+  useEffect(() => {
+    // adding event listener for window unload
+    console.log("Started listening for event beforeunload");
+    window.addEventListener("beforeunload", handleWindowUnload);
+
+    // remove event listener when component unmounts
+    return () => {
+      window.removeEventListener("beforeunload", handleWindowUnload);
+    };
+  }, []);
+
+  const handleWindowUnload = () => {
+    socket.emit("disconnected");
+  };
   // send message to the socket server
   useEffect(() => {
     if (sendMessage !== null) {
-      socket.current.emit("send-message", sendMessage);
+      console.log("sending message", sendMessage);
+      socket.emit("send-message", sendMessage);
     }
   }, [sendMessage]);
 
   // receive message from socket server
   useEffect(() => {
-    socket?.current?.on("receive-message", (data: any) => {
+    socket.on("receive-message", (data: any) => {
+      console.log("Recieving message", data);
       setReceiveMessage(data);
     });
   }, []);
@@ -97,8 +94,8 @@ function Chat() {
   return (
     <div className="chat p-4">
       <div className="left-side-chat">
-        <div className="chat-container">
-          <h2>Chats</h2>
+        <div className="chat-container px-4">
+          <h2 className="my-4">Chats</h2>
           <div className="chat-list">
             {chats.map((chat, key) => (
               <div key={key} onClick={() => setCurrentChat(chat)}>

@@ -7,25 +7,27 @@ import "react-toastify/dist/ReactToastify.css";
 function Authentication() {
   const [loginForm, setLoginForm] = useState(true);
   return (
-    <div className="form-container">
+    
+    <div className="form-container background-radial-gradient ">
+      
       {loginForm ? (
         <>
           <Login />
-          <p>
+          <p className="form-footer-text">
             Don't have an account{" "}
-            <button onClick={() => setLoginForm(false)}> Sign Up</button>
+            <button className="btn btn-primary" onClick={() => setLoginForm(false)}> Sign Up</button>
           </p>
         </>
       ) : (
         <>
           <Signup />
-          <p>
+          <p className="form-footer-text">
             Already have an account{" "}
-            <button onClick={() => setLoginForm(true)}>Login</button>
+            <button className="btn btn-primary" onClick={() => setLoginForm(true)}>Login</button>
           </p>
         </>
       )}
-    </div>
+      </div>
   );
 }
 

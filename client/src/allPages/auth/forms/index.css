@@ -31,3 +31,10 @@
   width: 20rem;
   margin-left: 1rem;
 } */
+
+
+.form-footer-text{
+  position: relative;
+    z-index: 1;
+    color: white;
+}

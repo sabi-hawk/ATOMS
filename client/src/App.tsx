@@ -36,43 +36,56 @@ const App = () => {
     if (!user.isClient) {
       return (
         <>
-          <div className="main">
-            <Navbar />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  user ? <Navigate to="dashboard" /> : <Navigate to="auth" />
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={user ? <Dashboard /> : <Navigate to="../auth" />}
-              />
-              <Route
-                path="/auth"
-                element={
-                  user ? <Navigate to="../dashboard" /> : <Authentication />
-                }
-              />
-              <Route
-                path="/mail-templates"
-                element={user ? <Composer /> : <Navigate to="../auth" />}
-              />
-              <Route
-                path="/about"
-                element={user ? <About /> : <Navigate to="../auth" />}
-              />
-              <Route
-                path="/demo"
-                element={user ? <Demo /> : <Navigate to="../auth" />}
-              />
-              <Route
-                path="/chat"
-                element={user ? <Chat /> : <Navigate to="../auth" />}
-              />
-              <Route path="*" element={user ? <Navigate to="../dashboard"/> : <Navigate to="../auth"/>}/>
-            </Routes>
+          <div className="main d-flex">
+            <div className="left-panel">
+              <Navbar />
+            </div>
+            <div className="right-panel w-100">
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    user ? <Navigate to="dashboard" /> : <Navigate to="auth" />
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={user ? <Dashboard /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="/auth"
+                  element={
+                    user ? <Navigate to="../dashboard" /> : <Authentication />
+                  }
+                />
+                <Route
+                  path="/mail-templates"
+                  element={user ? <Composer /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="/about"
+                  element={user ? <About /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="/demo"
+                  element={user ? <Demo /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="/chat"
+                  element={user ? <Chat /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="*"
+                  element={
+                    user ? (
+                      <Navigate to="../dashboard" />
+                    ) : (
+                      <Navigate to="../auth" />
+                    )
+                  }
+                />
+              </Routes>
+            </div>
           </div>
 
           <ToastContainer />
@@ -83,18 +96,24 @@ const App = () => {
     // for client
     return (
       <>
-        <div className="main">
-          <Navbar />
-          <Routes>
-            <Route
-              path="/chat"
-              element={user ? <Chat /> : <Navigate to="/auth" />}
-            />
-            <Route
-              path="*"
-              element={user ? <Navigate to="../chat"  /> : <Navigate to="../auth" />}
-            />
-          </Routes>
+        <div className="main d-flex">
+          <div className="left-panel">
+            <Navbar />
+          </div>
+          <div className="right-panel w-100">
+            <Routes>
+              <Route
+                path="/chat"
+                element={user ? <Chat /> : <Navigate to="/auth" />}
+              />
+              <Route
+                path="*"
+                element={
+                  user ? <Navigate to="../chat" /> : <Navigate to="../auth" />
+                }
+              />
+            </Routes>
+          </div>
         </div>
 
         <ToastContainer />
@@ -104,17 +123,18 @@ const App = () => {
 
   return (
     <>
-      <div className="main">
-        {/* <Navbar /> */}
-        <Routes>
-          <Route path="/" element={<Navigate to="/auth" replace />} />
-          <Route path="/auth" element={<Authentication />} />
-          <Route
-            path="/provider/:provider_id/chat"
-            element={<ClientAuthentication />}
-          />
-          <Route path="*" element={<Navigate to="../auth" />} />
-        </Routes>
+      <div className="main d-flex">
+        <div className="right-panel w-100">
+          <Routes>
+            <Route path="/" element={<Navigate to="/auth" replace />} />
+            <Route path="/auth" element={<Authentication />} />
+            <Route
+              path="/provider/:provider_id/chat"
+              element={<ClientAuthentication />}
+            />
+            <Route path="*" element={<Navigate to="../auth" />} />
+          </Routes>
+        </div>
       </div>
       <ToastContainer />
     </>
