@@ -8,16 +8,13 @@ import { useSelector } from "react-redux";
 import user from "../../flux/reducers/auth";
 import { AtomState } from "../../flux/store";
 import whatsAppImg from "../../images/chat-background.png";
+import logo from "../../images/logo.svg"
 
 const ChatBox = ({
   chat, // there was also currentUser
   setSendMessage,
   receiveMessage,
 }: any) => {
-  // const {
-  //   user: { userId, userName },
-  //   chats: { chatId }
-  // } = useSelector((state: AtomState) => state);
 
   const currentUser = useSelector((state: AtomState) => state?.auth.user?._id);
   const [userData, setUserData] = useState<any>(null);
@@ -183,7 +180,7 @@ const ChatBox = ({
           <div className="demo demo-side-panel message-default-screen justify-content-center bg-white">
             <img
               className="demo-logo"
-              src="/static/media/logo.7df8210cf3fa396392fe8fedf6e57aaa.svg"
+              src={logo}
               alt="Logo"
             />
             <h3 className="mt-5 mb-3 w-50 text-center border-bottom pb-3">
