@@ -94,9 +94,11 @@ function Chat() {
   return (
     <div className="chat p-4">
       <div className="left-side-chat">
-        <div className="chat-container px-4">
-          <h2 className="my-4">Chats</h2>
-          <div className="chat-list">
+        <div className="chat-container">
+          <div className="left-side-header">
+            <h2 className="m-0">Chats</h2>
+          </div>
+          <div className="chat-list px-4">
             {chats.map((chat, key) => (
               <div key={key} onClick={() => setCurrentChat(chat)}>
                 <Conversation

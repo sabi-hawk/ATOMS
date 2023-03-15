@@ -19,7 +19,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import About from "./components/About";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./allPages/dashboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Composer from "./allPages/composer";

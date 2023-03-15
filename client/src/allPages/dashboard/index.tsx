@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { checkWorkExists, startSearching } from "../../api/work";
 import "../../css/index.css";
 import { AtomState } from "../../flux/store";
-import './index.css'
+import "./index.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Graph from "../../components/Graphs";
 
 type filtersType = {
   selectedTags: Array<any>;
-  templateID: String;
+  templateID: string;
   numOfEmails: number | undefined;
 };
 function Dashboard() {
@@ -18,15 +22,39 @@ function Dashboard() {
 
   const {
     auth: {
-      user: { tags },
+      user: { tags, token },
     },
     extras: { templates },
   } = useSelector((state: AtomState) => state);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [statusMessage, setStatusMessage] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("FILTERS", filters);
+    try {
+      const { data } = await startSearching({
+        tags: filters.selectedTags,
+        templateId: filters.templateID,
+        emailThreshold: filters.numOfEmails,
+        token: token,
+      });
+      toast.success("Searching in Progress!", {
+        autoClose: 3000,
+      });
+      console.log("Work Response", data);
+    } catch (error) {
+      console.log("Error | Dashboard | handleSubmit");
+    }
   };
+  useEffect(() => {
+    const statusCheck = async () => {
+      const { status, data } = await checkWorkExists(token);
+      if (status === 200) {
+        setStatusMessage("work is already in progress");
+      }
+    };
+    statusCheck();
+  }, []);
   const handleSelectedTag = (tag: string) => {
     if (filters.selectedTags.includes(tag)) {
       setFilters({
@@ -67,55 +95,64 @@ function Dashboard() {
                   {/* Card Body */}
                   <div className="card-body">
                     <div className="chart-area">
-                      <form  className="form-dashboard-main" onSubmit={handleSubmit}>
-                        <label className="email-dashboard-heading mb-1">Select Email Template</label>
+                      <form
+                        className="form-dashboard-main"
+                        onSubmit={handleSubmit}
+                      >
+                        <label className="email-dashboard-heading mb-1">
+                          Select Email Template
+                        </label>
                         <div className="input-group mb-3">
-                        <select
-                          onChange={(e: any) =>
-                            setFilters({
-                              ...filters,
-                              templateID: e.target.value,
-                            })
-                          }
-                          className="custom-select"
-                          required
-                        >
-                          <option value=""> Choose Template</option>
-                          {templates?.map((name: string, index) => (
-                            <option key={index} value={name}>
-                              {name.includes("design")
-                                ? name.split(".")[0]
-                                : name.split(".")[1]}
-                            </option>
-                          ))}
-                        </select>
-                        </div>
-                        
-                        <label className="email-dashboard-heading mb-1">Select Tags</label>
-                        <div className="d-flex gap-3 mb-4 tags-p-main">
-                        {tags.map((tag: string, index) => (
-                          <p
-                          className="tags-p m-0"
-                            style={{
-                              background: filters.selectedTags.includes(tag)
-                                ? "green"
-                                : "",
-                              color: filters.selectedTags.includes(tag)
-                                ? "white"
-                                : "black",
-                            }}
-                            key={index}
-                            onClick={() => handleSelectedTag(tag)}
+                          <select
+                            onChange={(e: any) =>
+                              setFilters({
+                                ...filters,
+                                templateID: e.target.value,
+                              })
+                            }
+                            className="custom-select"
+                            required
                           >
-                            {tag}
-                          </p>
-                        ))}
+                            <option value=""> Choose Template</option>
+                            {templates?.map((name: string, index) => (
+                              <option key={index} value={name}>
+                                {name.includes("design")
+                                  ? name.split(".")[0]
+                                  : name.split(".")[1]}
+                              </option>
+                            ))}
+                          </select>
                         </div>
 
-                        <label className="email-dashboard-heading mb-1">Set Email Threshold</label>
+                        <label className="email-dashboard-heading mb-1">
+                          Select Tags
+                        </label>
+                        <div className="d-flex gap-3 mb-4 tags-p-main">
+                          {tags.map((tag: string, index) => (
+                            <p
+                              className="tags-p m-0"
+                              style={{
+                                background: filters.selectedTags.includes(tag)
+                                  ? "green"
+                                  : "",
+                                color: filters.selectedTags.includes(tag)
+                                  ? "white"
+                                  : "black",
+                              }}
+                              key={index}
+                              onClick={() => handleSelectedTag(tag)}
+                            >
+                              {tag}
+                            </p>
+                          ))}
+                        </div>
+
+                        <label className="email-dashboard-heading mb-1">
+                          Set Email Threshold
+                        </label>
                         <div className="d-flex submit-dashboard gap-2 justify-content-between">
                           <input
-                          className="form-control w-25"
+                            className="form-control w-25"
                             min="10"
                             max="100"
                             type="number"
@@ -129,10 +166,19 @@ function Dashboard() {
                             required
                           />
                           <div className="d-flex gap-2 justify-content-between">
-                            <button type="submit" className="btn btn-primary">
+                            <button
+                              type="submit"
+                              className={`btn btn-primary ${
+                                statusMessage !== "" && "btn-disable"
+                              }`}
+                            >
                               Start Searching
                             </button>
-                            <button id="send-emails" type="button" className="btn btn-primary btn-disable">
+                            <button
+                              id="send-emails"
+                              type="button"
+                              className="btn btn-primary btn-disable"
+                            >
                               Send Emails
                             </button>
                           </div>
@@ -140,7 +186,15 @@ function Dashboard() {
                       </form>
 
                       <div className="d-flex form-dashboard-main justify-content-between mb-0 align-items-center">
-                        <p className="m-0">Status : InProgress</p>
+                        {statusMessage !== "" ? (
+                          <div>
+                            <small>{statusMessage}</small>
+                            <p className="m-0">Status : Searching</p>
+                          </div>
+                        ) : (
+                          <p className="m-0">Status : IDLE</p>
+                        )}
+
                         <button type="button" className="btn btn-success">
                           Check Status
                         </button>
@@ -161,7 +215,7 @@ function Dashboard() {
                   {/* Card Body */}
                   <div className="card-body">
                     <div className="chart-pie pt-4 pb-2">
-                      <canvas id="myPieChart" />
+                      <Graph />
                     </div>
                     <div className="mt-4 text-center small">
                       <span className="mr-2">

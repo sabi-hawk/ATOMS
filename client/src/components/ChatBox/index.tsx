@@ -7,7 +7,8 @@ import InputEmoji from "react-input-emoji";
 import { useSelector } from "react-redux";
 import user from "../../flux/reducers/auth";
 import { AtomState } from "../../flux/store";
-import whatsAppImg from "../../images/bg-whatsapp.png";
+import whatsAppImg from "../../images/chat-background.png";
+
 const ChatBox = ({
   chat, // there was also currentUser
   setSendMessage,
@@ -88,107 +89,111 @@ const ChatBox = ({
   });
   return (
     <>
-      <div className="ChatBox-container">
-        {chat ? (
-          <>
-            <div className="chat-header">
-              <div className="follower">
-                <div className="chat-card-container">
-                  <img
-                    src={
-                      userData?.profilePicture
-                        ? process.env.REACT_APP_PUBLIC_FOLDER +
-                          userData?.profilePicture
-                        : process.env.REACT_APP_PUBLIC_FOLDER +
-                          "defaultProfile.png"
-                    }
-                    alt=""
-                    className="followerImage"
-                    style={{ width: "50px", height: "50px" }}
-                  />
-                  <div className="name" style={{ fontSize: "0.8rem" }}>
-                    <span className="name-span">
-                      {prettifyName(userData?.name?.first)}{" "}
-                      {prettifyName(userData?.name?.last)}
-                    </span>
-                  </div>
+      {chat ? (
+        <div className="ChatBox-container">
+          <div className="chat-header">
+            <div className="follower">
+              <div className="chat-card-container">
+                <img
+                  src={
+                    userData?.profilePicture
+                      ? process.env.REACT_APP_PUBLIC_FOLDER +
+                        userData?.profilePicture
+                      : process.env.REACT_APP_PUBLIC_FOLDER +
+                        "defaultProfile.png"
+                  }
+                  alt=""
+                  className="followerImage"
+                  style={{ width: "50px", height: "50px" }}
+                />
+                <div className="name" style={{ fontSize: "0.8rem" }}>
+                  <span className="name-span">
+                    {prettifyName(userData?.name?.first)}{" "}
+                    {prettifyName(userData?.name?.last)}
+                  </span>
                 </div>
               </div>
-              <hr
-                style={{
-                  width: "100%",
-                  border: "1px solid gainsboro",
-                  opacity: "1",
-                  margin: '10px 0px 0px 0px'
-                }}
-              />
             </div>
-            {/* ChatBox Messages */}
-            <div className="chat-body">
-              {/* <img src={whatsAppImg} alt="" /> */}
-              {messages.map((message: any) => (
-                <>
-                  <div
-                    ref={scroll}
-                    className={
-                      message.senderId === currentUser
-                        ? "message own"
-                        : "message"
-                    }
-                  >
-                    <span>{message.text}</span>
-                    <span>{format(message.createdAt)}</span>
-                  </div>
-                </>
-              ))}
-            </div>
-            {/* chat-sender */}
-            <div className="chat-sender">
-              <div>+</div>
-              <InputEmoji
-                value={newMessage}
-                onChange={handleChange}
-                onKeyDown={(e: any) => {
-                  if (e.key === "Enter") {
-                    handleSend(e);
+            {/* <hr
+              style={{
+                width: "100%",
+                border: "1px solid gainsboro",
+                opacity: "1",
+                margin: "10px 0px 0px 0px",
+              }}
+            /> */}
+          </div>
+          {/* ChatBox Messages */}
+          <div
+            className="chat-body"
+            style={{
+              backgroundImage: `url(${whatsAppImg})`,
+              backgroundSize:'contain'
+            }}
+          >
+            {/* <img src={whatsAppImg} alt="" /> */}
+            {messages.map((message: any) => (
+              <>
+                <div
+                  ref={scroll}
+                  className={
+                    message.senderId === currentUser
+                      ? "message own"
+                      : "message"
                   }
-                }}
-              />
-              <div className="send-button button" onClick={handleSend}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-6 h-6"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                  />
-                </svg>
-              </div>
+                  <span>{message.text}</span>
+                  <span>{format(message.createdAt)}</span>
+                </div>
+              </>
+            ))}
+          </div>
+          {/* chat-sender */}
+          <div className="chat-sender">
+            <div>+</div>
+            <InputEmoji
+              value={newMessage}
+              onChange={handleChange}
+              onKeyDown={(e: any) => {
+                if (e.key === "Enter") {
+                  handleSend(e);
+                }
+              }}
+            />
+            <div className="send-button button" onClick={handleSend}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                />
+              </svg>
             </div>
-          </>
-        ) : (
-          <span className="chatbox-empty-message">
-            <div className="demo demo-side-panel message-default-screen justify-content-center bg-white">
-              <img
-                className="demo-logo"
-                src="/static/media/logo.7df8210cf3fa396392fe8fedf6e57aaa.svg"
-                alt="Logo"
-              />
-              <h3 className="mt-5 mb-3 w-50 text-center border-bottom pb-3">
-                Automated Business Analyst <br />
-                &amp; Project Excavator
-              </h3>
-              <p> Tap on a Chat to start Conversation...</p>
-            </div>
-          </span>
-        )}
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div className="chatbox-empty-message">
+          <div className="demo demo-side-panel message-default-screen justify-content-center bg-white">
+            <img
+              className="demo-logo"
+              src="/static/media/logo.7df8210cf3fa396392fe8fedf6e57aaa.svg"
+              alt="Logo"
+            />
+            <h3 className="mt-5 mb-3 w-50 text-center border-bottom pb-3">
+              Automated Business Analyst <br />
+              &amp; Project Excavator
+            </h3>
+            <p> Tap on a Chat to start Conversation...</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

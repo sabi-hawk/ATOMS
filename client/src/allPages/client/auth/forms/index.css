@@ -2,8 +2,9 @@
   height: calc(100% - 86px);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: end;
   flex-direction: column;
+  padding-right: 10%;
 }
 .auth-form {
   display: flex;

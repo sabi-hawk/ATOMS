@@ -30,8 +30,7 @@ const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
     <>
       <div className="follower conversation">
         <div className="chat-card-container">
-          {online && <div className="online-dot"></div>}
-
+          <div className={online ? 'online-dot' : 'offline-dot'}></div>
           <img
             src={
               userData?.profilePicture

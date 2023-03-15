@@ -1,0 +1,559 @@
+{
+	"info": {
+		"_postman_id": "e8fc9a5d-60cb-44b1-a8e6-38fc68794aa2",
+		"name": "ATOMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24595979"
+	},
+	"item": [
+		{
+			"name": "post",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"creator\": \"vdfv\", \r\n    \"title\": \"vdds\", \r\n    \"message\": \"vds\", \r\n    \"tags\": \"vvads\", \r\n    \"selectedFile\": \"data:application/pdf;base64,JVBERi0xLjUNCiWhs8XXDQ…0MD5dPj4NCnN0YXJ0eHJlZg0KMTM1NjUwMw0KJSVFT0YNCg==\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/posts/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "python",
+			"item": [
+				{
+					"name": "extractEmails",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": \"graphics designing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/python?numOfEmails=5&numOfPages=3&search=\"graphics designing\"",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"python"
+							],
+							"query": [
+								{
+									"key": "numOfEmails",
+									"value": "5"
+								},
+								{
+									"key": "numOfPages",
+									"value": "3"
+								},
+								{
+									"key": "search",
+									"value": "\"graphics designing\""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": {\r\n        \"first\": \"sabahat\",\r\n        \"last\": \"atique\"\r\n    },\r\n    \"organization\": \"Soliton Technologies\",\r\n    \"email\": \"miansabby516@gmail.com\",\r\n    \"password\": \"graphics516\",\r\n    \"country\": \"Pakistan\" \r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"miansabby516@gmail.com\",\r\n    \"password\": \"graphics516\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get-user",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get-User-Data",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "add-user-tags",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNhYmJ5QGdtYWlsLmNvbSIsInVzZXJJZCI6IjYzYjViOWVlYTkxNjIxZjdhZjEwZTI1NCIsInNlc3Npb25JZCI6IjYzZmIwNmMzNDQwZTIzOTllZTdlMzEyNCIsImlhdCI6MTY3NzM5NTY1Mn0.P6yv3gXsl6yiQkmbQVYzAElCY9QRYgFe1B8lDKoupbI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tags\": [\r\n        \"test\",\r\n        \"test2\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/user/tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"user",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-user-tags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "auth-token",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3001/api/user/tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"user",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "conversation",
+			"item": [
+				{
+					"name": "chat",
+					"item": [
+						{
+							"name": "create-chat",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"senderId\": \"63c03518077d70ab9ca19a1c\",\r\n    \"receiverId\": \"63b5b9eea91621f7af10e254\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/api/conversation/chat",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"api",
+										"conversation",
+										"chat"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-user-chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/api/conversation/chat/user/63c03518077d70ab9ca19a1c",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"api",
+										"conversation",
+										"chat",
+										"user",
+										"63c03518077d70ab9ca19a1c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-specific-chat",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/api/conversation/chat/find/63c03518077d70ab9ca19a1c/63b5b9eea91621f7af10e254",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"api",
+										"conversation",
+										"chat",
+										"find",
+										"63c03518077d70ab9ca19a1c",
+										"63b5b9eea91621f7af10e254"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send-message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"senderId\": \"63b5b9eea91621f7af10e254\",\r\n    \"text\": \"or suna\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/api/conversation/chat/63c035bb077d70ab9ca19a1e/message",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"api",
+										"conversation",
+										"chat",
+										"63c035bb077d70ab9ca19a1e",
+										"message"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-chat-message",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get-chat",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "get-chat-messages",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "message",
+					"item": [
+						{
+							"name": "send-message",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"chatId\": \"63c04d1168318f9ad6d44986\",\r\n    \"senderId\": \"63c03518077d70ab9ca19a1c\",\r\n    \"text\": \"M route\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3001/api/conversation/message/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"api",
+										"conversation",
+										"message",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get-messages",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "send-email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"htmlContent\": \"<h2 style=\\\"color:#ff6600;\\\">Hello People!, Welcome to Bacancy!</h2>\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/conversation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"conversation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send-grid-email",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "media",
+			"item": [
+				{
+					"name": "upload-file",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_file",
+									"type": "file",
+									"src": "myprofile.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3001/api/media/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"media",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "templates",
+			"item": [
+				{
+					"name": "get-design",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/api/templates/design?name=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"api",
+								"templates",
+								"design"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get-design-names",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

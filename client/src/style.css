@@ -214,7 +214,7 @@ body{
 /* scroll */
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 /* Track */
@@ -224,7 +224,7 @@ body{
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background:#b3b3b3;
 }
 
 /* Handle on hover */
@@ -347,6 +347,7 @@ body{
   min-height: 80vh;
   overflow: auto;
   height: calc(100vh - 50px);
+  border: 1px solid;
 }
 
 .chat-list {
@@ -371,6 +372,7 @@ body{
 
 .conversation > div {
   position: relative;
+  gap: 10px;
 }
 
 .online-dot {
@@ -378,8 +380,8 @@ body{
   border-radius: 50%;
   position: absolute;
   left: 2rem;
-  width: 1rem;
-  height: 1rem;
+  width: 0.7rem;
+  height: 0.7rem;
 }
 
 .chatbox-empty-message {
@@ -389,6 +391,7 @@ body{
   font-size: 20px;
   width: 100%;
   height: 100%;
+  height: calc(100vh - 50px);
 }
 
 @media screen and (max-width: 768px) {
@@ -455,14 +458,15 @@ body{
 .ChatBox-container {
   background: var(--cardColor);
   border-radius: 1rem;
-  display: grid;
-  /* grid-template-rows: 14vh 60vh 13vh; */
+  /* display: grid; */
+  /* grid-template-rows: 10vh 80vh; */
   height: calc(100vh - 50px);
   position: relative;
+  border: 1px solid;
 }
 
 .chat-header {
-  padding: 1rem 1rem 0rem 1rem;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   background-color: #fff;
@@ -495,7 +499,9 @@ body{
   padding: 1.5rem;
   /* overflow: scroll; */
   overflow: auto;
-  height: calc(100% - 55px);
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  height: calc(100% - 120px);
 }
 
 .message {
@@ -534,6 +540,7 @@ body{
   align-self: end;
   position: absolute;
   width: 100%;
+  bottom: 0;
 }
 .chat-sender > input {
   height: 70%;
@@ -546,20 +553,19 @@ body{
   padding: 0px 15px 0px 15px;
 }
 .chat-sender > div:nth-of-type(1) {
-  background: lightgray;
+  background: #4e73df;
   border-radius: 0.5rem;
   display: flex;
+  color: white;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   cursor: pointer;
-  padding-bottom: 4px;
   width: 40px;
   height: 40px;
 }
-
 .react-input-emoji--button svg {
-  fill: BLACK;
+  fill:#4e73df;
 }
 .chat-sender > div {
   height: 100%;
@@ -568,10 +574,11 @@ body{
 .send-button.button svg.w-6.h-6 {
   width: auto;
   height: 26px;
-  stroke: black;
+  stroke: #4e73df;
+  stroke-width: 2px;
 }
 .send-button.button {
-  border: 2px solid black;
+  border: 3px solid #4e73df;
   border-radius: 100%;
   padding: 6px;
   height: 40px;
@@ -591,4 +598,29 @@ body{
   display: block;
   margin: 0px auto;
   cursor: pointer;
+}
+
+
+.offline-dot {
+  background-color: #f96060;
+  border-radius: 50%;
+  position: absolute;
+  left: 2rem;
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.left-side-header{
+  border-bottom: 1px solid;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+}
+
+hr:not([size]) {
+  height: 0px;
+}
+
+.signup-inner{
+ grid-template-columns: 1fr 1fr;
+ column-gap: 15px;
 }

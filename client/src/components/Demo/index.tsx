@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Graph from "./Graph";
+import Graph from "../Graphs";
 import logo from "../../images/logo.svg";
 import Form from "../Form";
-import Lotties from "./Lotties";
+import Lotties from "../meta/Lotties";
 import DemoTable from "../CreateTables/DemoTable";
 
 function Demo() {

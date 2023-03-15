@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import postsRouter from "./post/post";
 import pythonRouter from "./python/python";
 import authRouter from "./auth";
@@ -6,6 +6,7 @@ import userRouter from "./user";
 import conversationRouter from "./conversation";
 import mediaRouter from "./media";
 import templatesRouter from "./templates";
+import workRouter from "./work";
 
 const apiRouter = Router();
 apiRouter.use("/posts", postsRouter);
@@ -15,4 +16,5 @@ apiRouter.use("/user", userRouter);
 apiRouter.use("/conversation", conversationRouter);
 apiRouter.use("/media", mediaRouter);
 apiRouter.use("/templates", templatesRouter);
+apiRouter.use("/work", workRouter);
 export default apiRouter;
