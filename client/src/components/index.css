@@ -1,0 +1,12 @@
+.span-copy {
+  padding: 0 !important;
+}
+.span-copy button {
+  border: 0px;
+  height: 85%;
+  color: #6e707e;
+  background-color: #eaecf4;
+}
+.profile-labels {
+  margin: 8px 0px 0px 0px;
+}

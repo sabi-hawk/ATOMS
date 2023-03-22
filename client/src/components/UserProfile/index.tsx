@@ -1,26 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { AtomState } from "../../flux/store";
 import { prettyName } from "../../utils";
-// import { Modal, Button, Form } from "react-bootstrap";
+import "../index.css";
 
 const ProfileModal = ({ setOpen }: any) => {
-  const [show, setShow] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-
   const {
-    auth: { user },
+    auth: {
+      user: { name, email, tags: userTags, _id },
+    },
   } = useSelector((state: AtomState) => state);
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
-    // setOpen(false);
-    setShow(true);
-  };
+
+  const [tags, setTags] = useState<string[]>(userTags);
+  const chatLink = `http://localhost:3000/provider/${_id}/chat`;
+  const [isCopied, setIsCopied] = useState(false);
+
   const handleSave = () => {
     console.log("Saved!");
-    setShow(false);
   };
   const handleTagChange = (index: number, value: string) => {
     const newTags = [...tags];
@@ -38,17 +34,6 @@ const ProfileModal = ({ setOpen }: any) => {
 
   return (
     <>
-      {/* <button
-        className="btn btn-primary"
-        onClick={() => {
-          setShow(true);
-        }}
-      >
-        Edit Profile
-      </button> */}
-      {/* <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button> */}
       <div
         className="modal fade"
         id="exampleModal"
@@ -76,7 +61,7 @@ const ProfileModal = ({ setOpen }: any) => {
                       type="text"
                       className="form-control"
                       placeholder="Name"
-                      value={""} // prettyName(user?.name)
+                      value={prettyName(name)}
                       aria-label="Username"
                       aria-describedby="addon-wrapping"
                     />
@@ -91,14 +76,13 @@ const ProfileModal = ({ setOpen }: any) => {
                       readOnly
                       type="text"
                       className="form-control"
-                      placeholder="Recipient's Email"
-                      value={user?.email.split("@")[0]}
-                      aria-label="Recipient's username"
+                      placeholder="User's Email"
+                      value={email.split("@")[0]}
+                      aria-label="Username"
                       aria-describedby="basic-addon2"
                     ></input>
                     <span className="input-group-text" id="basic-addon2">
-                      {`@${user?.email.split("@")[1]}`}
-                      {/* @example.com */}
+                      {`@${email.split("@")[1]}`}
                     </span>
                   </div>
                 </div>
@@ -111,9 +95,10 @@ const ProfileModal = ({ setOpen }: any) => {
                           onChange={(e) =>
                             handleTagChange(index, e.target.value)
                           }
+                          value={tag}
                           type="text"
                           className="form-control"
-                          placeholder="Recipient's username"
+                          placeholder="enter tag"
                           aria-label="Recipient's username"
                           aria-describedby="button-addon2"
                         />
@@ -139,6 +124,39 @@ const ProfileModal = ({ setOpen }: any) => {
                     Add tags relevant to your profession, work ...
                   </small>
                 </div>
+                <label className="profile-labels">Chat Link</label>
+                <div className="input-group flex-nowrap mb-3">
+                  <span className="input-group-text" id="addon-wrapping">
+                    LINK
+                  </span>
+                  <input
+                    readOnly
+                    type="text"
+                    className="form-control"
+                    placeholder="Name"
+                    value={chatLink}
+                    aria-label="Username"
+                    aria-describedby="addon-wrapping"
+                  />
+                  <span
+                    className="input-group-text span-copy"
+                    id="addon-wrapping"
+                  >
+                    <button
+                      disabled={isCopied}
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(chatLink);
+                        setIsCopied(true);
+                        setTimeout(() => {
+                          setIsCopied(false);
+                        }, 3000);
+                      }}
+                    >
+                      {isCopied ? "Copied" : "Copy"}
+                    </button>
+                  </span>
+                </div>
               </form>
             </div>
             <div className="modal-footer">
@@ -161,181 +179,8 @@ const ProfileModal = ({ setOpen }: any) => {
           </div>
         </div>
       </div>
-      {/* <div className="modal" tabIndex={-1}>
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Edit Profile</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <form>
-                  <div>
-                    <label>Name</label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label>Tags</label>
-                    {tags.map((tag, index) => (
-                      <div key={index} className="input-group mb-2">
-                        <input
-                          type="text"
-                          value={tag}
-                          onChange={(e) =>
-                            handleTagChange(index, e.target.value)
-                          }
-                        />
-                        <div className="input-group-append">
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => handleRemoveTag(index)}
-                          >
-                            -
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    <button className="btn btn-primary" onClick={handleAddTag}>
-                      +
-                    </button>
-                  </div>
-                </form> 
-              </div>
-              <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={() => {
-                  setShow(false)
-                }}>
-                  Cancel
-                </button>
-                <button className="btn btn-primary" onClick={handleSave}>
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> */}
-
-      {/* <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Profile</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Tags</Form.Label>
-              {tags.map((tag, index) => (
-                <div key={index} className="input-group mb-2">
-                  <Form.Control
-                    type="text"
-                    value={tag}
-                    onChange={(e) => handleTagChange(index, e.target.value)}
-                  />
-                  <div className="input-group-append">
-                    <Button
-                      variant="danger"
-                      onClick={() => handleRemoveTag(index)}
-                    >
-                      -
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              <Button variant="primary" onClick={handleAddTag}>
-                +
-              </Button>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Save
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </>
   );
 };
 
 export default ProfileModal;
-
-{
-  /* <Form>
-                  <Form.Group>
-                    <Form.Label>Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Tags</Form.Label>
-                    {tags.map((tag, index) => (
-                      <div key={index} className="input-group mb-2">
-                        <Form.Control
-                          type="text"
-                          value={tag}
-                          onChange={(e) =>
-                            handleTagChange(index, e.target.value)
-                          }
-                        />
-                        <div className="input-group-append">
-                          <Button
-                            variant="danger"
-                            onClick={() => handleRemoveTag(index)}
-                          >
-                            -
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                    <Button variant="primary" onClick={handleAddTag}>
-                      +
-                    </Button>
-                  </Form.Group>
-                </Form> */
-}

@@ -1,4 +1,4 @@
-import { API } from "../index";
+import API from "../index";
 
 export const getTemplatesNames = (userId: string, token: string) =>
   API.get(`/templates/user/${userId}/names`, {

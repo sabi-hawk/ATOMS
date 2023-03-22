@@ -48,56 +48,58 @@ function Demo() {
                         <button
                           type="button"
                           className="btn btn-primary mt-2 ml-auto"
-                          onClick={() => setModalState(true)}
+                          data-bs-toggle="modal"
+                          data-bs-target="#statisticsModal"
                         >
                           Statistics
                         </button>
-                        {modalState && (
+
+                        <div
+                          className="modal fade"
+                          id="statisticsModal"
+                          tabIndex={-1}
+                          role="dialog"
+                          aria-labelledby="statisticsModalTitle"
+                          aria-hidden="true"
+                        >
                           <div
-                            className="modal fade"
-                            id="exampleModalScrollable"
-                            tabIndex={-1}
-                            role="dialog"
-                            aria-labelledby="exampleModalScrollableTitle"
-                            aria-hidden="true"
+                            className="modal-dialog modal-dialog-scrollable"
+                            role="document"
                           >
-                            <div
-                              className="modal-dialog modal-dialog-scrollable"
-                              role="document"
-                            >
-                              <div className="modal-content">
-                                <div className="modal-header">
-                                  <h5
-                                    className="modal-title"
-                                    id="exampleModalScrollableTitle"
-                                  >
-                                    Statistics
-                                  </h5>
-                                  <button
-                                    onClick={() => setModalState(false)}
-                                    type="button"
-                                    className="close"
-                                    aria-label="Close"
-                                  >
-                                    <span aria-hidden="true">×</span>
-                                  </button>
-                                </div>
-                                <div className="modal-body">
-                                  <Graph />
-                                </div>
-                                <div className="modal-footer">
-                                  <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={() => setModalState(false)}
-                                  >
-                                    Close
-                                  </button>
-                                </div>
+                            <div className="modal-content">
+                              <div className="modal-header">
+                                <h5
+                                  className="modal-title"
+                                  id="statisticsModalTitle"
+                                >
+                                  Statistics
+                                </h5>
+                                <button
+                                  type="button"
+                                  className="close"
+                                  aria-label="Close"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#statisticsModal"
+                                >
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <div className="modal-body">
+                                <Graph />
+                              </div>
+                              <div className="modal-footer">
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#statisticsModal"
+                                >
+                                  Close
+                                </button>
                               </div>
                             </div>
                           </div>
-                        )}
+                        </div>
                       </>
                     ) : (
                       <div className="demo demo-side-panel w-100 justify-content-center bg-white">

@@ -18,6 +18,7 @@ import FunctionalBar from "./functionalBar";
 import "./index.css";
 import { toast } from "react-toastify";
 import { setTemplates } from "../../flux/reducers/extras";
+import { sendEmail } from "../../api/conversation";
 
 function Composer() {
   const {
@@ -25,6 +26,7 @@ function Composer() {
       user: { _id, token },
     },
   } = useSelector((state: AtomState) => state);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
   const [designNames, setDesignNames] = useState([]);
   const emailEditorRef: any = useRef(null);
   const dispatch = useDispatch();
@@ -88,6 +90,7 @@ function Composer() {
     });
   };
   const onLoad = async () => {
+    setIsLoading(true);
     const { data } = await axios.get(
       "http://localhost:3001/api/templates/design"
     );
@@ -121,6 +124,7 @@ function Composer() {
   };
   const onReady = async () => {
     // editor is ready
+    setIsLoading(false);
     // @ts-ignore
     emailEditorRef.current.editor.registerCallback(
       "image",
@@ -154,36 +158,56 @@ function Composer() {
     console.log("onReady");
   };
 
-  const sendMail = async () => {
+  const handleSendEmail = async () => {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
       console.log("DESIGN ON EXPORT", data.design);
       console.log("export html", html, design);
+      const response = await sendEmail(
+        {
+          to: "receiver@gmail.com",
+          from: "sender@gmail.com",
+          subject: "FYP-2 Submission",
+          htmlContent: html,
+        },
+        token
+      );
+      // axios.post(
+      //   "http://localhost:3001/api/conversation",
+      //   {
+      //     to: "receiver@gmail.com",
+      //     from: "sender@gmail.com",
+      //     subject: "FYP-2 Submission",
+      //     htmlContent: html,
+      //   }
+      // );
+      console.log("send mail trap response", response);
     });
-    const html = "";
-    const { data } = await axios.post(
-      "http://localhost:3001/api/conversation",
-      {
-        to: "receiver@gmail.com",
-        from: "sender@gmail.com",
-        subject: "FYP-2 Submission",
-        htmlContent: html,
-      }
-    );
-    console.log("data");
   };
   return (
-    <div className="composer-parent">
-      <FunctionalBar
-        exportHtml={exportHtml}
-        loadDesign={loadDesign}
-        handleSelectChange={handleSelectChange}
-      />
-      <div className="email-editor">
-        <EmailEditor ref={emailEditorRef} onLoad={onLoad} onReady={onReady} />
+    <>
+      {isLoading && (
+        <div className="effect-loading">
+          <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          {"  "}
+          Loading ...
+        </div>
+      )}
+      <div className={isLoading ? "d-none" : "composer-parent"}>
+        <FunctionalBar
+          exportHtml={exportHtml}
+          loadDesign={loadDesign}
+          handleSelectChange={handleSelectChange}
+          handleSendEmail={handleSendEmail}
+        />
+        <div className="email-editor">
+          <EmailEditor ref={emailEditorRef} onLoad={onLoad} onReady={onReady} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

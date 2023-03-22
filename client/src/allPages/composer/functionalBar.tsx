@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { AtomState } from "../../flux/store";
-const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
+const FunctionalBar = ({
+  exportHtml,
+  loadDesign,
+  handleSelectChange,
+  handleSendEmail,
+}: any) => {
   const [designName, setDesignName] = useState("");
   const {
+    auth: {
+      user: { _id },
+    },
     extras: { templates },
   } = useSelector((state: AtomState) => state);
+  const chatLink = `http://localhost:3000/provider/${_id}/chat`;
+  const [isCopied, setIsCopied] = useState(false);
   return (
     <>
       <div className="template-controls my-2">
@@ -19,7 +29,43 @@ const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
             </option>
           ))}
         </select>
+        <div className="composer-input-group flex-nowrap mb-3">
+          <span className="input-group-text" id="addon-wrapping">
+            LINK
+          </span>
+          <input
+            readOnly
+            type="text"
+            className="form-control"
+            placeholder="Name"
+            value={chatLink}
+            aria-label="Username"
+            aria-describedby="addon-wrapping"
+          />
+          <span className="input-group-text span-copy" id="addon-wrapping">
+            <button
+              disabled={isCopied}
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(chatLink);
+                setIsCopied(true);
+                setTimeout(() => {
+                  setIsCopied(false);
+                }, 3000);
+              }}
+            >
+              {isCopied ? "Copied" : "Copy"}
+            </button>
+          </span>
+        </div>
         <div>
+          <button
+            className="btn btn-primary mr-2"
+            id="btn-export"
+            onClick={handleSendEmail}
+          >
+            Send Email
+          </button>
           <button
             className="btn btn-primary mr-2"
             id="btn-export"
@@ -47,7 +93,7 @@ const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Modal title
+                Enter Template Name
               </h1>
               <button
                 type="button"
@@ -71,6 +117,8 @@ const FunctionalBar = ({ exportHtml, loadDesign, handleSelectChange }: any) => {
                 Close
               </button>
               <button
+                data-bs-toggle="modal"
+                data-bs-target="#nameModal"
                 type="button"
                 className="btn btn-primary"
                 onClick={() => exportHtml(designName)}

@@ -6,7 +6,7 @@ import messageRouter from "./message";
 const conversationRouter = Router();
 
 // Email
-conversationRouter.post("/email", conversationController.sendMail);
+conversationRouter.post("/mailtrap/email", conversationController.sendMail);
 conversationRouter.post("/sendgrid/email", conversationController.gridMailSend);
 //Chat
 conversationRouter.use("/chat", chatRouter);

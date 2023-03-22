@@ -23,3 +23,38 @@
   color: #fff;
   text-align: center;
 } */
+
+.effect-loading {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+}
+
+.composer-input-group {
+  margin-bottom: 0px !important;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 33%;
+}
+
+.composer-input-group input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.composer-input-group span:nth-child(1) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.composer-input-group span:nth-child(3) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+}

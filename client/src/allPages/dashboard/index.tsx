@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkWorkExists, startSearching } from "../../api/work";
-import "../../css/index.css";
 import { AtomState } from "../../flux/store";
-import "./index.css";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Graph from "../../components/Graphs";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import "../../css/index.css";
+import "./index.css";
+import { setTemplates } from "../../flux/reducers/extras";
+import { getTemplatesNames } from "../../api/templates";
 
 type filtersType = {
   selectedTags: Array<any>;
@@ -19,14 +22,13 @@ function Dashboard() {
     templateID: "",
     numOfEmails: undefined,
   });
-
   const {
     auth: {
-      user: { tags, token },
+      user: { tags, token, _id },
     },
     extras: { templates },
   } = useSelector((state: AtomState) => state);
-
+  const dispatch = useDispatch();
   const [statusMessage, setStatusMessage] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,15 +48,23 @@ function Dashboard() {
       console.log("Error | Dashboard | handleSubmit");
     }
   };
+
   useEffect(() => {
     const statusCheck = async () => {
-      const { status, data } = await checkWorkExists(token);
-      if (status === 200) {
-        setStatusMessage("work is already in progress");
-      }
+      await checkWorkExists(token);
+      setStatusMessage("work is already in progress");
     };
     statusCheck();
   }, []);
+
+  useEffect(() => {
+    const getTemplateNames = async () => {
+      const { data } = await getTemplatesNames(_id, token);
+      dispatch(setTemplates(data.files));
+    };
+    getTemplateNames();
+  }, []);
+
   const handleSelectedTag = (tag: string) => {
     if (filters.selectedTags.includes(tag)) {
       setFilters({

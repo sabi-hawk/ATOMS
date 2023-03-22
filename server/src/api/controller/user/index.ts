@@ -8,7 +8,6 @@ const SECRET_KEY = "KisiKoNahiBtaonga"
 export const getUser = async (req: Request, res: Response) => {
     try {
         const data = await authenticateRequest(req, res);
-        // console.log("Checking Data in getUser", data)
         let user = await User.findOne({ _id: data.userId });
         if (user) {
             return res.status(200).json(user);
@@ -17,7 +16,6 @@ export const getUser = async (req: Request, res: Response) => {
     } catch (error: any) {
         console.log("Error | controller | user | getUser | catch", error)
         return res.status(error?.status || 500).json({ error: error?.error || "Something went wrong" });
-        // return res.status(500).json({ message: "Something went wrong", error: error });
     }
 }
 
@@ -45,7 +43,7 @@ export const addUserTags = async (req: Request, res: Response) => {
         if (user) {
             let updatedTags = user.tags;
             updatedTags = updatedTags.concat(req.body.tags);
-            console.log("passing these", data.userId)
+            console.log("passing these", data.userId, updatedTags)
             await User.findOneAndUpdate({ _id: data.userId, tags: updatedTags })
             return res.status(200).json({ message: "Tags are Updated Successfully!" })
         }

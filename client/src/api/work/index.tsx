@@ -1,5 +1,4 @@
-import axios from "axios";
-import { API } from "../index";
+import API from "../index";
 
 type workPayloadType = {
   tags: Array<any>;
@@ -7,13 +6,14 @@ type workPayloadType = {
   emailThreshold: Number | undefined;
   token: string;
 };
-export const startSearching = async ({
+
+export async function startSearching({
   tags,
   templateId,
   emailThreshold,
   token,
-}: workPayloadType) =>
-  API.post(
+}: workPayloadType): Promise<any> {
+  return API.post(
     "/work",
     {
       tags: tags,
@@ -26,10 +26,12 @@ export const startSearching = async ({
       },
     }
   );
+}
 
-export const checkWorkExists = (token: string) =>
-  API.get("/work/status", {
+export async function checkWorkExists(token: string): Promise<any> {
+  return API.get("/work/status", {
     headers: {
       "auth-token": token,
     },
   });
+}

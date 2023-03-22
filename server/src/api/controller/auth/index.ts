@@ -54,7 +54,8 @@ export const login = async (req: Request, res: Response) => {
 const createSession = async (user: any) => {
     // const expiresAt = new Date(Date.now() + 60 * 1000);
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1);
+    // expiresAt.setHours(expiresAt.getHours() + 1);
+    expiresAt.setHours(expiresAt.getSeconds() + 2);//
     // console.log("BEFORE");
     const newSession = await new Session({
         userId: user._id,
