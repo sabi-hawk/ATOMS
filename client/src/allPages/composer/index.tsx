@@ -33,7 +33,7 @@ function Composer() {
 
   const handleSelectChange = async (event: any) => {
     try {
-      const { data } = await getDesign(event.target.value, token);
+      const { data } = await getDesign(event.target.value);
       emailEditorRef.current.editor.loadDesign(data.design);
     } catch (err) {
       console.log("Error | Composer | handleSelectChange", err);
@@ -42,7 +42,7 @@ function Composer() {
   useEffect(() => {
     const getTemplateNames = async () => {
       try {
-        const { data } = await getTemplatesNames(_id, token);
+        const { data } = await getTemplatesNames(_id);
         setDesignNames(data.files);
         dispatch(setTemplates(data.files));
         console.log("FOUND TEMPLATE NAMES", data.files);
@@ -58,9 +58,9 @@ function Composer() {
       const { design, html } = data;
       console.log("DESIGN ON EXPORT", data.design);
       try {
-        const { data } = await saveTemplate(_id, token, design, designName);
+        const { data } = await saveTemplate(_id, design, designName);
         //
-        const { data: namesList } = await getTemplatesNames(_id, token);
+        const { data: namesList } = await getTemplatesNames(_id);
         setDesignNames(namesList.files);
         dispatch(setTemplates(namesList.files));
         toast.success(data.message, {
@@ -170,8 +170,7 @@ function Composer() {
           from: "sender@gmail.com",
           subject: "FYP-2 Submission",
           htmlContent: html,
-        },
-        token
+        }
       );
       // axios.post(
       //   "http://localhost:3001/api/conversation",

@@ -37,8 +37,7 @@ function Dashboard() {
       const { data } = await startSearching({
         tags: filters.selectedTags,
         templateId: filters.templateID,
-        emailThreshold: filters.numOfEmails,
-        token: token,
+        emailThreshold: filters.numOfEmails
       });
       toast.success("Searching in Progress!", {
         autoClose: 3000,
@@ -51,7 +50,7 @@ function Dashboard() {
 
   useEffect(() => {
     const statusCheck = async () => {
-      await checkWorkExists(token);
+      await checkWorkExists();
       setStatusMessage("work is already in progress");
     };
     statusCheck();
@@ -59,7 +58,7 @@ function Dashboard() {
 
   useEffect(() => {
     const getTemplateNames = async () => {
-      const { data } = await getTemplatesNames(_id, token);
+      const { data } = await getTemplatesNames(_id);
       dispatch(setTemplates(data.files));
     };
     getTemplateNames();

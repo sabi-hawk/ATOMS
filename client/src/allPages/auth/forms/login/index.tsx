@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "../../../../api/auth";
 import { setUser } from "../../../../flux/reducers/auth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AxiosError } from "axios";
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -16,10 +15,10 @@ function Login() {
   const navigate = useNavigate();
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    try {
-      const { data } = await userLogin(loginData);
+    const { data, status } = await userLogin(loginData);
+    if (status === 200) {
       dispatch(setUser(data));
-      if (data?.isClient) {
+      if (data.isClient) {
         navigate("/chat");
       } else {
         navigate("/dashboard");
@@ -27,20 +26,9 @@ function Login() {
       toast.success("Successfully LoggedIn!", {
         autoClose: 3000,
       });
-      // if (!(data?.message === "Invalid Credentials")) {
-      //   dispatch(setUser(data));
-      //   console.log("logged in", data);
-      //   if (data?.isClient) {
-      //     navigate("/chat");
-      //   } else {
-      //     navigate("/dashboard");
-      //   }
-      // } else {
-      //   console.log("invalid credentials");
-      // }
-    } catch (error: any) {
-      if (error.response.data.message) {
-        toast.error(error.response.data.message, {
+    } else {
+      if (status === 400) {
+        toast.error(data.message, {
           autoClose: 3000,
         });
       } else {
@@ -48,7 +36,6 @@ function Login() {
           autoClose: 3000,
         });
       }
-      console.log(error);
     }
   };
   return (
@@ -65,10 +52,13 @@ function Login() {
         className="auth-form px-4 py-5 px-md-5  bg-glass"
         onSubmit={handleLogin}
         style={{
-          borderRadius: '0.35rem',
+          borderRadius: "0.35rem",
         }}
       >
-        <h3 className="mb-4 display-5 fw-bold ls-tight"> Login <br /> Information</h3>
+        <h3 className="mb-4 display-5 fw-bold ls-tight">
+          {" "}
+          Login <br /> Information
+        </h3>
         <div className="form-row">
           <div className="form-outline mb-2 w-100">
             <input
@@ -82,18 +72,9 @@ function Login() {
               }
             />
           </div>
-          {/* <label>Email</label>
-          <input
-            type="email"
-            placeholder="Enter Email"
-            value={loginData.email}
-            onChange={(e) =>
-              setLoginData({ ...loginData, email: e.target.value })
-            } */}
-          {/* /> */}
         </div>
         <div className="form-row">
-        <div className="form-outline mb-2 w-100">
+          <div className="form-outline mb-2 w-100">
             <input
               className="bg-transparent form-control py-2"
               type="password"
@@ -104,15 +85,6 @@ function Login() {
               }
             />
           </div>
-          {/* <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter Password"
-            value={loginData.password}
-            onChange={(e) =>
-              setLoginData({ ...loginData, password: e.target.value })
-            }
-          /> */}
         </div>
         <button className="btn btn-primary w-100" type="submit">
           Login In

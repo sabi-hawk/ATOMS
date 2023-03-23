@@ -67,7 +67,7 @@ function Chat() {
     console.log("inside getting chat ");
     const getChats = async () => {
       try {
-        const { data } = await userChats(user._id, user.token);
+        const { data } = await userChats(user._id);
 
         dispatch(setChatsData(data));
         setChats(data);

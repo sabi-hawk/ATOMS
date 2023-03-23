@@ -40,8 +40,7 @@ function Signup() {
       console.log("Check", providerId);
       const { data: conversationData } = await createConversation(
         data.user._id,
-        providerId,
-        data.token
+        providerId
       );
       //
       toast.success("Successfully Registered!", { autoClose: 3000 });

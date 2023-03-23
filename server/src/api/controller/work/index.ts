@@ -5,7 +5,6 @@ import { authenticateRequest } from "../../../utils/mongo";
 export const startWorking = async (req: Request, res: Response) => {
     try {
         const data = await authenticateRequest(req, res);
-
         const work = await new Work({
             userId: data.userId,
             tags: req.body.tags,
@@ -23,6 +22,7 @@ export const startWorking = async (req: Request, res: Response) => {
 
 export const checkWorkExists = async (req: Request, res: Response) => {
     try {
+        console.log("authenticating work request");
         const data = await authenticateRequest(req, res);
         const work = await Work.findOne({ userId: data.userId, status: "searching" })
         if (work) {

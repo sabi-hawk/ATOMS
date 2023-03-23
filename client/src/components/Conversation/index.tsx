@@ -18,7 +18,7 @@ const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
     const userId = data.members.find((id: any) => id !== currentUserId);
     const getUserData = async () => {
       try {
-        const { data } = await getUser(userId, user.token);
+        const { data } = await getUser(userId);
         setUserData(data);
       } catch (error) {
         console.log("Error | Chat | Conversation | getUserData", error);

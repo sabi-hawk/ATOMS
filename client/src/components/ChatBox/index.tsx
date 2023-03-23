@@ -34,7 +34,7 @@ const ChatBox = ({
     const userId = chat?.members?.find((id: string) => id !== currentUser);
     const getUserData = async () => {
       try {
-        const { data } = await getUser(userId, user.token);
+        const { data } = await getUser(userId);
         setUserData(data);
         console.log("found user", data);
       } catch (error) {
@@ -47,7 +47,7 @@ const ChatBox = ({
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat._id, user.token);
+        const { data } = await getMessages(chat._id);
         setMessages(data);
         console.log("Found Messages", data);
       } catch (error) {
@@ -68,7 +68,7 @@ const ChatBox = ({
 
     //send message to database
     try {
-      const { data } = await sendMessage(chat._id, message, user.token);
+      const { data } = await sendMessage(chat._id, message);
       setMessages([...messages, data]);
       setNewMessage("");
     } catch (error) {

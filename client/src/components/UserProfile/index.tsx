@@ -4,7 +4,7 @@ import { AtomState } from "../../flux/store";
 import { prettyName } from "../../utils";
 import "../index.css";
 
-const ProfileModal = ({ setOpen }: any) => {
+const ProfileModal = () => {
   const {
     auth: {
       user: { name, email, tags: userTags, _id },
@@ -77,19 +77,19 @@ const ProfileModal = ({ setOpen }: any) => {
                       type="text"
                       className="form-control"
                       placeholder="User's Email"
-                      value={email.split("@")[0]}
+                      value={email?.split("@")[0]}
                       aria-label="Username"
                       aria-describedby="basic-addon2"
                     ></input>
                     <span className="input-group-text" id="basic-addon2">
-                      {`@${email.split("@")[1]}`}
+                      {`@${email?.split("@")[1]}`}
                     </span>
                   </div>
                 </div>
                 <div>
                   <label className="">Tags</label>
                   <div className="d-grid custom-user-tags">
-                    {tags.map((tag, index) => (
+                    {tags?.map((tag, index) => (
                       <div key={index} className="input-group mt-2">
                         <input
                           onChange={(e) =>

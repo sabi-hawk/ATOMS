@@ -14,12 +14,12 @@ export const authenticateRequest = async (req: Request, res: Response) => {
     try {
 
         const token = req.header("auth-token");
+        console.log("here is token", token);
         if (!token) {
             throw {
                 status: 401,
                 error: 'Unauthorized Access'
             }
-
         }
         const decode: any = jwt.verify(token, SECRET_KEY);
         const session = await Session.findOne({ _id: decode.sessionId })
@@ -29,7 +29,6 @@ export const authenticateRequest = async (req: Request, res: Response) => {
                 status: 401,
                 error: 'Session not found'
             }
-
         }
 
         if (session.expiresAt) {
@@ -40,10 +39,9 @@ export const authenticateRequest = async (req: Request, res: Response) => {
                     status: 401,
                     error: 'Session expired'
                 }
-
             }
         }
-        
+
         return decode;
     } catch (error) {
         console.log("Error | utils | mongo | authenticate")

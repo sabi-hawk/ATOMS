@@ -1,14 +1,9 @@
 import API from "../index";
 
-export const getTemplatesNames = (userId: string, token: string) =>
-  API.get(`/templates/user/${userId}/names`, {
-    headers: {
-      "auth-token": token,
-    },
-  });
+export const getTemplatesNames = (userId: string) =>
+  API.get(`/templates/user/${userId}/names`);
 export const saveTemplate = (
   userId: string,
-  token: string,
   design: any,
   designName: string
 ) =>
@@ -16,16 +11,7 @@ export const saveTemplate = (
     `/templates/user/${userId}/save/${designName}`,
     {
       design: design,
-    },
-    {
-      headers: {
-        "auth-token": token,
-      },
     }
   );
-export const getDesign = (name: string, token: string) =>
-  API.get(`/templates/design?name=${name}`, {
-    headers: {
-      "auth-token": token,
-    },
-  });
+export const getDesign = (name: string) =>
+  API.get(`/templates/design?name=${name}`);

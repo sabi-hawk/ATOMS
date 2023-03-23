@@ -6,15 +6,33 @@ import { setTemplates } from "../flux/reducers/extras";
 
 const API = axios.create({ baseURL: "http://localhost:3001/api" });
 
+API.interceptors.request.use(
+  (config) => {
+    const {
+      auth: { user },
+    } = store.getState();
+    if (user?.token && config.headers) {
+      config.headers["auth-token"] = user.token;
+    }
+
+    return config;
+  },
+  (error) => {
+    console.log("API Request | Interceptor |  Error", error);
+    return Promise.reject(error);
+  }
+);
 API.interceptors.response.use(
   (res) => {
     return res;
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       store.dispatch(setUser({}));
       store.dispatch(setChatsData({}));
       store.dispatch(setTemplates({}));
+    } else {
+      return error?.response;
     }
   }
 );
