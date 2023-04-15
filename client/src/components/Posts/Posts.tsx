@@ -8,7 +8,6 @@ const Posts = () => {
   const classes = useStyles();
   const posts = useSelector((state: any) => state.posts);
 
-  console.log("MY TEST FINDS OUT POSTS :", posts);
   return (
     <>
       <Post />

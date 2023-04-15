@@ -14,7 +14,6 @@ export const authenticateRequest = async (req: Request, res: Response) => {
     try {
 
         const token = req.header("auth-token");
-        console.log("here is token", token);
         if (!token) {
             throw {
                 status: 401,
@@ -46,6 +45,5 @@ export const authenticateRequest = async (req: Request, res: Response) => {
     } catch (error) {
         console.log("Error | utils | mongo | authenticate")
         throw error;
-        // return res.status(500).json({ message: "Something went wrong2", error: error });
     }
 }

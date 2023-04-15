@@ -40,9 +40,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
 
-        // console.log("USER ID", existingUser._id)
         const session = await createSession(existingUser)
-        // const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, SECRET_KEY);
         res.status(200).json({ ...existingUser.toObject(), token: session.accessToken, expiresAt: session.expiresAt }); // user: existingUser, token: token
 
     } catch (error) {
@@ -55,14 +53,12 @@ const createSession = async (user: any) => {
     // const expiresAt = new Date(Date.now() + 60 * 1000);
     const expiresAt = new Date();
     // expiresAt.getSeconds() + 2
-    expiresAt.setHours(expiresAt.getHours() + 1);//
-    // console.log("BEFORE");
+    expiresAt.setHours(expiresAt.getHours() + 1);
     const newSession = await new Session({
         userId: user._id,
         expiresAt: expiresAt
     }).save();
 
-    // console.log("AFTER");
     const token = jwt.sign({ email: user.email, userId: user._id, sessionId: newSession._id }, SECRET_KEY);
     
 

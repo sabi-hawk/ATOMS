@@ -11,20 +11,19 @@ function Login() {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const handleLogin = async (e: any) => {
     e.preventDefault();
     try {
       const { data } = await userLogin(loginData);
       if (!(data?.message === "Invalid Credentials")) {
         dispatch(setUser(data));
-        console.log("logged in", data);
         navigate("/chat");
       } else {
         console.log("invalid credentials");
       }
     } catch (error) {
-      console.log(error);
+      console.log("Error | handleLogin", error);
     }
   };
   return (

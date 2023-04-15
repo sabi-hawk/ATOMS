@@ -19,7 +19,6 @@ function Signup() {
     try {
       const { confirmPassword, ...registrationData } = signupData;
       const { data } = await registerProvider(registrationData);
-      console.log("Sign Up response", data);
     } catch (error) {
       console.log("Error | Sign-Up", error);
     }

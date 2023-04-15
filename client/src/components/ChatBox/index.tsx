@@ -25,7 +25,6 @@ const ChatBox = ({
   useEffect(() => {
     // also added && receiveMessage.chatId === chat._id
     if (receiveMessage !== null) {
-      console.log("Data received in Child ChatBox");
       setMessages([...messages, receiveMessage]);
     }
   }, [receiveMessage]);
@@ -36,7 +35,6 @@ const ChatBox = ({
       try {
         const { data } = await getUser(userId);
         setUserData(data);
-        console.log("found user", data);
       } catch (error) {
         console.log("Error | Chat | ChatBox | getUserData", error);
       }
@@ -49,7 +47,6 @@ const ChatBox = ({
       try {
         const { data } = await getMessages(chat._id);
         setMessages(data);
-        console.log("Found Messages", data);
       } catch (error) {
         console.log("Error | Chat | ChatBox | getMessages", error);
       }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "nodemon ./src/api/server.ts"
+    "dev:server": "nodemon ./src/api/server.ts"
   },
   "keywords": [],
   "author": "",

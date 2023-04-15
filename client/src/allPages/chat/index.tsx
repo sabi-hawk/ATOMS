@@ -21,15 +21,12 @@ function Chat() {
   const [receiveMessage, setReceiveMessage] = useState(null);
 
   const dispatch = useDispatch();
-  // const socket = useRef<any>();
 
   // initializing socket
   useEffect(() => {
-    // socket.current = io("http://localhost:3002");
     socket.emit("new-user-add", user._id);
     socket.on("get-users", (users: any) => {
       setOnlineUsers(users);
-      console.log(onlineUsers);
     });
   }, [user]); // [user]
 
@@ -50,7 +47,6 @@ function Chat() {
   // send message to the socket server
   useEffect(() => {
     if (sendMessage !== null) {
-      console.log("sending message", sendMessage);
       socket.emit("send-message", sendMessage);
     }
   }, [sendMessage]);
@@ -58,20 +54,17 @@ function Chat() {
   // receive message from socket server
   useEffect(() => {
     socket.on("receive-message", (data: any) => {
-      console.log("Recieving message", data);
       setReceiveMessage(data);
     });
   }, []);
 
   useEffect(() => {
-    console.log("inside getting chat ");
     const getChats = async () => {
       try {
         const { data } = await userChats(user._id);
 
         dispatch(setChatsData(data));
         setChats(data);
-        console.log("Chats", chats);
       } catch (error: any) {
         if (error.response.status === 401) {
           dispatch(setUser({}));
@@ -88,9 +81,7 @@ function Chat() {
     const online = onlineUsers.find((user: any) => user.userId === chatMember);
     return online ? true : false;
   };
-  // const handleSetCurrentChat = ({ event, chat }) => {
-  //   setCurrentChat(chat);
-  // };
+
   return (
     <div className="chat p-4">
       <div className="left-side-chat">
@@ -112,17 +103,7 @@ function Chat() {
         </div>
       </div>
       <div className="right-side-chat">
-        <div /*style={{ width: "20rem", alignSelf: "flex-end" }}*/>
-          {/* <div className="navIcons">
-            <Link to="../dashboard">
-              <img src={Dashboard} alt="" />
-            </Link>
-            <UilSetting />
-            <img src={Noti} alt="" />
-            <Link to="../chat">
-              <img src={Comment} alt="" />
-            </Link>
-          </div> */}
+        <div>
           <ChatBox
             chat={currentChat}
             setSendMessage={setSendMessage}

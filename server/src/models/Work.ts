@@ -9,10 +9,9 @@ const WorkSchema = new mongoose.Schema(
         emailThreshold: { type: Number },
         status: { type: String, enum: statusEnum, required: true },
         emailsList: { type: Array },
-        name: { type: String, default: "myWork" }
-    }, {
-    timestamps: true
-}
+        name: { type: String, default: "myWork" },
+        timeStamp: { type: Date, default: Date.now },
+    }
 )
-
+WorkSchema.index({ timeStamp: -1 });
 export default mongoose.model("Work", WorkSchema)

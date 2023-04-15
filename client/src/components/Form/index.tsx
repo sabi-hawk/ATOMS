@@ -27,7 +27,6 @@ function Form({ setFormStatus, setEmailsLoading }: any) {
 
     setEmailsLoading(false);
     dispatch(getEmailRecords(data));
-    console.log("Response", data);
   };
   return (
     <form className="demoForm" onSubmit={handleSubmit}>

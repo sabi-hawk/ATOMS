@@ -45,7 +45,6 @@ function Composer() {
         const { data } = await getTemplatesNames(_id);
         setDesignNames(data.files);
         dispatch(setTemplates(data.files));
-        console.log("FOUND TEMPLATE NAMES", data.files);
       } catch (err) {
         console.log("Error | Composer | getDesigns", err);
       }
@@ -56,7 +55,6 @@ function Composer() {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
-      console.log("DESIGN ON EXPORT", data.design);
       try {
         const { data } = await saveTemplate(_id, design, designName);
         //
@@ -66,7 +64,6 @@ function Composer() {
         toast.success(data.message, {
           autoClose: 3000,
         });
-        console.log("Design Saved", data);
       } catch (err) {
         console.log("Error | Composer | ExportHTML", err);
       }
@@ -76,7 +73,6 @@ function Composer() {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { html } = data;
-      console.log("DESIGN ON EXPORT", html);
       const response = await axios.post(
         "http://localhost:3001/api/conversation",
         {
@@ -86,7 +82,6 @@ function Composer() {
           htmlContent: html,
         }
       );
-      console.log("data", response.data);
     });
   };
   const onLoad = async () => {
@@ -94,7 +89,6 @@ function Composer() {
     const { data } = await axios.get(
       "http://localhost:3001/api/templates/design"
     );
-    console.log("DESIGN ON LOAD", data.design);
     // @ts-ignore
     emailEditorRef.current.editor.loadDesign(data.design);
   };
@@ -110,7 +104,6 @@ function Composer() {
     const { data } = await axios.get(
       "http://localhost:3001/api/templates/design?empty=1"
     );
-    console.log("DESIGN ON LOAD", data.design);
     // @ts-ignore
     emailEditorRef.current.editor.loadDesign(data.design);
   };
@@ -118,7 +111,6 @@ function Composer() {
     const { data } = await axios.get(
       "http://localhost:3001/api/templates/design?empty=0&name=default_1"
     );
-    console.log("DESIGN ON LOAD", data.design);
     // @ts-ignore
     emailEditorRef.current.editor.loadDesign(data.design);
   };
@@ -142,16 +134,11 @@ function Composer() {
           formData,
           { headers: config.headers }
         );
-        console.log("Inside Register CallBack", data);
         // Do something to upload the image and return the URL of the uploaded image
         done({
           url: `http://localhost:3001/images/` + data.nameList[0],
           progress: 0,
         });
-        // done({
-        //   url: "https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5d35eacaf1176b0008974b54%2F0x0.jpg%3FcropX1%3D790%26cropX2%3D5350%26cropY1%3D784%26cropY2%3D3349",
-        //   progress: 0
-        // });
       }
     );
     document.getElementById("btn-export")?.classList.remove("d-none");
@@ -162,8 +149,7 @@ function Composer() {
     // @ts-ignore
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
-      console.log("DESIGN ON EXPORT", data.design);
-      console.log("export html", html, design);
+      
       const response = await sendEmail(
         {
           to: "receiver@gmail.com",
@@ -172,16 +158,6 @@ function Composer() {
           htmlContent: html,
         }
       );
-      // axios.post(
-      //   "http://localhost:3001/api/conversation",
-      //   {
-      //     to: "receiver@gmail.com",
-      //     from: "sender@gmail.com",
-      //     subject: "FYP-2 Submission",
-      //     htmlContent: html,
-      //   }
-      // );
-      console.log("send mail trap response", response);
     });
   };
   return (

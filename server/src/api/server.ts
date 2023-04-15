@@ -38,7 +38,6 @@ const socket = new Server(server, {
 
 let activeUsers: Array<socketUser> = [];
 socket.on('connection', (client) => {
-  // console.log('a user connected');
   client.on('new-user-add', (newUserId) => {
     if (!activeUsers.some((user: socketUser) => user.userId === newUserId)) {
       activeUsers.push({
@@ -53,17 +52,13 @@ socket.on('connection', (client) => {
   client.on('send-message', (data: any) => {
     const { receiverId } = data;
     const user = activeUsers.find((user) => user.socketId !== client.id)
-    console.log("sending from socket to receiver Id ")
-    console.log("Data", data, user);
     if (user) {
       socket.to(user.socketId).emit("receive-message", data)
     }
   })
 
   client.on('disconnect', () => {
-    console.log("Inside disconnected of socket server");
     activeUsers = activeUsers.filter((user: socketUser) => user.socketId !== client.id)
-    console.log('user disconnected', activeUsers);
     socket.emit('get-users', activeUsers);
   })
 
@@ -74,7 +69,6 @@ app.use((req, res, next) => {
   console.log(`HTTP Method - ${req.method} , URL - ${req.url}`);
   next();
 })
-// console.log("Here is path:", path.join(__dirname, '../../public'))
 
 app.use("/images", express.static(path.join(__dirname, '../../public')))
 
@@ -88,7 +82,6 @@ app.use("/api", apiRouter);
 server.listen(3002, () =>
   console.log(`Socket running on port: 3002`)
 )
-// console.log("ENV:", process.env.MONGODB_URI);
 mongoose.set("strictQuery", false);
 mongoose
   // @ts-ignore
@@ -104,4 +97,3 @@ mongoose
   )
   .catch((error) => console.log(error.message));
 
-// mongoose.set("useFindAndModify", false);

@@ -25,7 +25,6 @@ const Form = () => {
       "http://localhost:3001/api/posts/",
       postData
     );
-    console.log("FOUND:", data);
     dispatch(create(data));
   };
   return (

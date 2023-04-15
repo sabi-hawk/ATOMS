@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 function Lotties({ emailsLoading }: any) {
   const searchInfo = useSelector((state: any) => state.search);
   useEffect(() => {
-    console.log("Search Info", searchInfo);
     setTimeout(() => {
       setQueriesLoading(false);
     }, 5000);

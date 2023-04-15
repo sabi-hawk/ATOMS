@@ -25,7 +25,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header("auth-token");
-        // console.log("HERE is TOKEN", token);
         // @ts-ignore
         const decode = jwt.verify(token, SECRET_KEY);
         const session = await Session.findOne({ _id: decode.sessionId })
@@ -46,7 +45,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
             }
         }
         next();
-        // return decode;
     } catch (error) {
         console.log("Error | utils | mongo | authenticate")
     }

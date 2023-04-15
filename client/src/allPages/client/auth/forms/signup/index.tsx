@@ -26,28 +26,20 @@ function Signup() {
         isClient: true,
       });
 
-      // create it's chat
-      // const path = window.location.pathname;
-      // @ts-ignore
-      // const providerId = path.match(/provider\/(\d+)\/chat/)[1];
-      // const matchResult = path.match(/provider\/(\d+)/)?.input;
-      // const providerId = matchResult ? matchResult[1] : "";
+      
       const path = window.location.pathname;
       const parts = path.split("/");
       const providerId = parts[2];
-      // const {conversationData} = await createConversation()
-      //
+
       console.log("Check", providerId);
       const { data: conversationData } = await createConversation(
         data.user._id,
         providerId
       );
-      //
+      
       toast.success("Successfully Registered!", { autoClose: 3000 });
       navigate("/auth");
-      console.log("creating conversation", conversationData);
-      console.log("URL params", providerId);
-      console.log("Client Sign Up response", data);
+      
     } catch (error) {
       toast.error("Error Signing Up, Try Again!", { autoClose: 3000 });
       console.log("Error | Client | Sign-Up", error);

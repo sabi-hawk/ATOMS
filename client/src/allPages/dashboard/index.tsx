@@ -37,12 +37,11 @@ function Dashboard() {
       const { data } = await startSearching({
         tags: filters.selectedTags,
         templateId: filters.templateID,
-        emailThreshold: filters.numOfEmails
+        emailThreshold: filters.numOfEmails,
       });
       toast.success("Searching in Progress!", {
         autoClose: 3000,
       });
-      console.log("Work Response", data);
     } catch (error) {
       console.log("Error | Dashboard | handleSubmit");
     }
@@ -50,8 +49,16 @@ function Dashboard() {
 
   useEffect(() => {
     const statusCheck = async () => {
-      await checkWorkExists();
-      setStatusMessage("work is already in progress");
+      const {
+        status,
+        data: {
+          work: { status: workStatus },
+        },
+      } = await checkWorkExists();
+
+      if (workStatus) {
+        setStatusMessage(workStatus);
+      }
     };
     statusCheck();
   }, []);
@@ -177,16 +184,16 @@ function Dashboard() {
                           <div className="d-flex gap-2 justify-content-between">
                             <button
                               type="submit"
-                              className={`btn btn-primary ${
-                                statusMessage !== "" && "btn-disable"
-                              }`}
+                              className="btn btn-primary"
+                              disabled={statusMessage === "done-searching"}
                             >
                               Start Searching
                             </button>
                             <button
                               id="send-emails"
                               type="button"
-                              className="btn btn-primary btn-disable"
+                              className="btn btn-primary"
+                              disabled={statusMessage !== "done-searching"}
                             >
                               Send Emails
                             </button>
@@ -197,8 +204,12 @@ function Dashboard() {
                       <div className="d-flex form-dashboard-main justify-content-between mb-0 align-items-center">
                         {statusMessage !== "" ? (
                           <div>
-                            <small>{statusMessage}</small>
-                            <p className="m-0">Status : Searching</p>
+                            <small>
+                              {statusMessage === "done-searching"
+                                ? "Searching is Completed now you can send emails"
+                                : "Searching in Progress"}
+                            </small>
+                            <p className="m-0">Status : {statusMessage}</p>
                           </div>
                         ) : (
                           <p className="m-0">Status : IDLE</p>

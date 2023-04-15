@@ -7,7 +7,6 @@ import path from "path";
 export const saveDesign = async (req: Request, res: Response) => {
     try {
         const fileName = `${req.params.userId}_${Date.now()}.${req.params.name}`
-        // console.log("here Saving design");
         fs.writeFileSync(path.resolve(__dirname, `../../../../public/templates/${fileName}.json`), JSON.stringify(req.body.design));
         return res.status(200).json({ message: "Design Saved Successfully!" });
     } catch (error) {
@@ -20,18 +19,13 @@ export const getDesign = async (req: Request, res: Response) => {
     try {
         let fileName: any = req?.query?.name;
         const { name } = req.query;
-        // console.log("name is :", name);
         if (name === "" || name === undefined) {
             fileName = "emptyDesign.json"
         }
-        // else {
-        //     fileName = `${name}.json`
-        // }
         fs.readFile(path.resolve(__dirname, `../../../../public/templates/${fileName}`), "utf-8", (err, jsonString) => {
             if (err) {
                 console.log("Error reading jsonDesign", err);
                 return res.status(500).json({ message: "Something went wrong", error: err });
-
             }
             try {
                 const jsonDesign = JSON.parse(jsonString);
@@ -57,7 +51,6 @@ export const getDesignNames = async (req: Request, res: Response) => {
             }
             let filteredFiles: Array<any> = [];
             files.map((file: string) => {
-                // console.log("file name", file, userId, file.startsWith(userId) || file.includes("design"))
                 if (file.startsWith(userId) || file.includes("design")) {
                     filteredFiles.push(file)
                 }

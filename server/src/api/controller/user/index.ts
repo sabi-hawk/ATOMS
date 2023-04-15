@@ -21,7 +21,6 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const getUserData = async (req: Request, res: Response) => {
     try {
-        // console.log("inside get userData")
         await authenticateRequest(req, res);
         const { userId } = req.params;
 
@@ -43,7 +42,6 @@ export const addUserTags = async (req: Request, res: Response) => {
         if (user) {
             let updatedTags = user.tags;
             updatedTags = updatedTags.concat(req.body.tags);
-            console.log("passing these", data.userId, updatedTags)
             await User.findOneAndUpdate({ _id: data.userId, tags: updatedTags })
             return res.status(200).json({ message: "Tags are Updated Successfully!" })
         }
