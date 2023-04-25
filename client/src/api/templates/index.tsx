@@ -5,13 +5,12 @@ export const getTemplatesNames = (userId: string) =>
 export const saveTemplate = (
   userId: string,
   design: any,
+  html: string,
   designName: string
 ) =>
-  API.post(
-    `/templates/user/${userId}/save/${designName}`,
-    {
-      design: design,
-    }
-  );
+  API.post(`/templates/user/${userId}/save/${designName}`, {
+    design: design,
+    html: html,
+  });
 export const getDesign = (name: string) =>
   API.get(`/templates/design?name=${name}`);

@@ -9,7 +9,7 @@ type workPayloadType = {
 export async function startSearching({
   tags,
   templateId,
-  emailThreshold
+  emailThreshold,
 }: workPayloadType): Promise<any> {
   return API.post("/work", {
     tags: tags,
@@ -20,4 +20,8 @@ export async function startSearching({
 
 export async function checkWorkExists(): Promise<any> {
   return API.get("/work/status");
+}
+
+export async function sendEmails(): Promise<any> {
+  return API.post("/work/send/emails");
 }

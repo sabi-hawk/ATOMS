@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkWorkExists, startSearching } from "../../api/work";
+import { checkWorkExists, sendEmails, startSearching } from "../../api/work";
 import { AtomState } from "../../flux/store";
 import { toast } from "react-toastify";
 import Graph from "../../components/Graphs";
-import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "../../css/index.css";
 import "./index.css";
@@ -29,16 +28,17 @@ function Dashboard() {
     extras: { templates },
   } = useSelector((state: AtomState) => state);
   const dispatch = useDispatch();
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState("IDLE");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const { data } = await startSearching({
         tags: filters.selectedTags,
-        templateId: filters.templateID,
+        templateId: filters.templateID.split(".")[0],
         emailThreshold: filters.numOfEmails,
       });
+      setStatusMessage(data.status);
       toast.success("Searching in Progress!", {
         autoClose: 3000,
       });
@@ -81,6 +81,15 @@ function Dashboard() {
       setFilters({ ...filters, selectedTags: [...filters.selectedTags, tag] });
     }
   };
+
+  const handleSendEmails = async () => {
+    const { data } = await sendEmails();
+    toast.success(data.message, {
+      autoClose: 3000,
+    });
+    console.log("Send Emails Response", data);
+  };
+
   return (
     <>
       {/* Content Wrapper */}
@@ -169,8 +178,8 @@ function Dashboard() {
                         <div className="d-flex submit-dashboard gap-2 justify-content-between">
                           <input
                             className="form-control w-25"
-                            min="10"
-                            max="100"
+                            min="1"
+                            max="10"
                             type="number"
                             value={filters.numOfEmails || ""}
                             onChange={(event) =>
@@ -185,7 +194,7 @@ function Dashboard() {
                             <button
                               type="submit"
                               className="btn btn-primary"
-                              disabled={statusMessage === "done-searching"}
+                              disabled={statusMessage === "IDLE" ? false : true}
                             >
                               Start Searching
                             </button>
@@ -193,7 +202,12 @@ function Dashboard() {
                               id="send-emails"
                               type="button"
                               className="btn btn-primary"
-                              disabled={statusMessage !== "done-searching"}
+                              disabled={
+                                statusMessage === "done-searching"
+                                  ? false
+                                  : true
+                              }
+                              onClick={handleSendEmails}
                             >
                               Send Emails
                             </button>

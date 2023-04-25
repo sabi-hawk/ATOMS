@@ -56,7 +56,7 @@ function Composer() {
     emailEditorRef?.current?.editor?.exportHtml(async (data: HtmlExport) => {
       const { design, html } = data;
       try {
-        const { data } = await saveTemplate(_id, design, designName);
+        const { data } = await saveTemplate(_id, design, html, designName);
         //
         const { data: namesList } = await getTemplatesNames(_id);
         setDesignNames(namesList.files);
