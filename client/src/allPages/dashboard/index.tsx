@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { checkWorkExists, sendEmails, startSearching } from "../../api/work";
 import { AtomState } from "../../flux/store";
-import { toast } from "react-toastify";
-import Graph from "../../components/Graphs";
+import { useQuery } from "react-query";
+import { message } from "antd";
+import { setTemplates } from "../../flux/reducers/extras";
+import { getTemplatesNames } from "../../api/templates";
+import { showMessage } from "../../utils";
+import EmailChart from "../../components/Graphs/LineChart";
 import "react-toastify/dist/ReactToastify.css";
 import "../../css/index.css";
 import "./index.css";
-import { setTemplates } from "../../flux/reducers/extras";
-import { getTemplatesNames } from "../../api/templates";
 
 type filtersType = {
   selectedTags: Array<any>;
@@ -16,6 +18,8 @@ type filtersType = {
   numOfEmails: number | undefined;
 };
 function Dashboard() {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [filters, setFilters] = useState<filtersType>({
     selectedTags: [],
     templateID: "",
@@ -33,19 +37,32 @@ function Dashboard() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const { data } = await startSearching({
+      const {
+        data: {
+          work: { status },
+        },
+      } = await startSearching({
         tags: filters.selectedTags,
         templateId: filters.templateID.split(".")[0],
         emailThreshold: filters.numOfEmails,
       });
-      setStatusMessage(data.status);
-      toast.success("Searching in Progress!", {
-        autoClose: 3000,
-      });
+      setStatusMessage(status);
+      showMessage("success", "Searching in Progress !", messageApi);
     } catch (error) {
       console.log("Error | Dashboard | handleSubmit");
     }
   };
+
+  const state = useQuery(["workStatus"], async () => {
+    const {
+      data: {
+        work: { status: workStatus },
+      },
+    } = await checkWorkExists();
+    if (workStatus) {
+      setStatusMessage(workStatus);
+    }
+  });
 
   useEffect(() => {
     const statusCheck = async () => {
@@ -84,15 +101,14 @@ function Dashboard() {
 
   const handleSendEmails = async () => {
     const { data } = await sendEmails();
-    toast.success(data.message, {
-      autoClose: 3000,
-    });
-    console.log("Send Emails Response", data);
+    state.refetch();
+    showMessage("success", data.message, messageApi);
   };
 
   return (
     <>
       {/* Content Wrapper */}
+      {contextHolder}
       <div id="content-wrapper" className="d-flex flex-column">
         {/* Main Content */}
         <div id="content">
@@ -243,24 +259,13 @@ function Dashboard() {
                   {/* Card Header - Dropdown */}
                   <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 className="m-0 font-weight-bold text-primary">
-                      Revenue Sources
+                      Email Volume Trend
                     </h6>
                   </div>
                   {/* Card Body */}
                   <div className="card-body">
                     <div className="chart-pie pt-4 pb-2">
-                      <Graph />
-                    </div>
-                    <div className="mt-4 text-center small">
-                      <span className="mr-2">
-                        <i className="fas fa-circle text-primary" /> Direct
-                      </span>
-                      <span className="mr-2">
-                        <i className="fas fa-circle text-success" /> Social
-                      </span>
-                      <span className="mr-2">
-                        <i className="fas fa-circle text-info" /> Referral
-                      </span>
+                      <EmailChart />
                     </div>
                   </div>
                 </div>
@@ -352,7 +357,7 @@ function Dashboard() {
                 <div className="card shadow ">
                   <div className="card-header py-3">
                     <h6 className="m-0 font-weight-bold text-primary">
-                      Illustrations
+                      Active Chats
                     </h6>
                   </div>
                   <div className="card-body">
@@ -398,75 +403,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
-{
-  /* Color System */
-}
-{
-  /* <div className="row">
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-primary text-white shadow">
-                    <div className="card-body">
-                      Primary
-                      <div className="text-white-50 small">#4e73df</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-success text-white shadow">
-                    <div className="card-body">
-                      Success
-                      <div className="text-white-50 small">#1cc88a</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-info text-white shadow">
-                    <div className="card-body">
-                      Info
-                      <div className="text-white-50 small">#36b9cc</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-warning text-white shadow">
-                    <div className="card-body">
-                      Warning
-                      <div className="text-white-50 small">#f6c23e</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-danger text-white shadow">
-                    <div className="card-body">
-                      Danger
-                      <div className="text-white-50 small">#e74a3b</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-secondary text-white shadow">
-                    <div className="card-body">
-                      Secondary
-                      <div className="text-white-50 small">#858796</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-light text-black shadow">
-                    <div className="card-body">
-                      Light
-                      <div className="text-black-50 small">#f8f9fc</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-lg-6 mb-4">
-                  <div className="card bg-dark text-white shadow">
-                    <div className="card-body">
-                      Dark
-                      <div className="text-white-50 small">#5a5c69</div>
-                    </div>
-                  </div>
-                </div>
-              </div> */
-}

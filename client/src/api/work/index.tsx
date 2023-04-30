@@ -25,3 +25,6 @@ export async function checkWorkExists(): Promise<any> {
 export async function sendEmails(): Promise<any> {
   return API.post("/work/send/emails");
 }
+export async function getWorkStatistics(): Promise<any> {
+  return API.get("/work/get_WorkStatistics");
+}

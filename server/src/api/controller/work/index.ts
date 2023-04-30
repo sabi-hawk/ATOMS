@@ -117,3 +117,31 @@ export const sendEmails = async (req: Request, res: Response) => {
         return res.status(error?.status || 500).json({ error: error?.error || "Something went wrong" });
     }
 }
+
+export const get_WorkStatistics = async (req: Request, res: Response) => {
+    try {
+        // Retrieve the data from the WorkModel
+        const data = await authenticateRequest(req, res);
+        const workData = await Work.find({ userId: data.userId });
+
+        console.log("FOUND OBJS", workData)
+        // Process the data to get the email count per day
+        const emailData = workData.reduce((acc: any, cur: any) => {
+            const dateStr = new Date(cur.timeStamp).toISOString().substr(0, 10);
+            acc[dateStr] = (acc[dateStr] || 0) + cur.emailThreshold;
+            return acc;
+        }, {});
+
+        // Convert the emailData object to an array of objects suitable for display in a chart/graph
+        const chartData = Object.keys(emailData).map((dateStr) => ({
+            date: dateStr,
+            count: emailData[dateStr],
+        }));
+
+        // Send the chartData to the frontend
+        res.send(chartData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+}  

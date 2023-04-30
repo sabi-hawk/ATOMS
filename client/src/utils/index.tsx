@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { setUser } from "../flux/reducers/auth";
 import { setChatsData } from "../flux/reducers/chats";
 import { setTemplates } from "../flux/reducers/extras";
+import { MessageInstance } from "antd/es/message/interface";
 
 type Name = {
   first: string;
@@ -46,3 +47,15 @@ export function useUnauthorized() {
 
   return handleUnauthorized;
 }
+
+
+export const showMessage = (
+  type: "success" | "error" | "warning",
+  message: string,
+  messageApi: MessageInstance
+) => {
+  messageApi.open({
+    type: type,
+    content: message,
+  });
+};
