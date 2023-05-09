@@ -18,7 +18,7 @@ const EmailChart = () => {
   const config = {
     data: graphData,
     xField: "date",
-    yField: "count",
+    yField: "mails",
     seriesField: "",
     height: 400,
   };

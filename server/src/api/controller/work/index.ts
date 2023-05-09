@@ -135,7 +135,7 @@ export const get_WorkStatistics = async (req: Request, res: Response) => {
         // Convert the emailData object to an array of objects suitable for display in a chart/graph
         const chartData = Object.keys(emailData).map((dateStr) => ({
             date: dateStr,
-            count: emailData[dateStr],
+            mails: emailData[dateStr],
         }));
 
         // Send the chartData to the frontend
