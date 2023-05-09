@@ -8,10 +8,16 @@ type IInputWrapperProps = {
   data?: any;
   currentUserId?: string;
   wrapperStyle?: React.CSSProperties;
-  online: Boolean;
+  online?: Boolean;
+  isActiveChat?: Boolean;
   children?: JSX.Element | JSX.Element[];
 };
-const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
+const Conversation = ({
+  data,
+  currentUserId,
+  online,
+  isActiveChat = false,
+}: IInputWrapperProps) => {
   const [userData, setUserData] = useState<any>(null);
   const user = useSelector((state: AtomState) => state?.auth?.user);
   useEffect(() => {
@@ -30,7 +36,9 @@ const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
     <>
       <div className="follower conversation">
         <div className="chat-card-container">
-          <div className={online ? 'online-dot' : 'offline-dot'}></div>
+          {!isActiveChat && (
+            <div className={online ? "online-dot" : "offline-dot"}></div>
+          )}
           <img
             src={
               userData?.profilePicture
@@ -46,11 +54,17 @@ const Conversation = ({ data, currentUserId, online }: IInputWrapperProps) => {
               {prettifyName(userData?.name?.first)}{" "}
               {prettifyName(userData?.name?.last)}
             </span>
-            <span>{online ? "Online" : "Offline"}</span>
+            {!isActiveChat && <span>{online ? "Online" : "Offline"}</span>}
           </div>
         </div>
       </div>
-      <hr style={{ width: "100%", border: "1px solid #707071", margin:"10px 0px" }} />
+      <hr
+        style={{
+          width: "100%",
+          border: "1px solid #707071",
+          margin: "10px 0px",
+        }}
+      />
     </>
   );
 };

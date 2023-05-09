@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkWorkExists, sendEmails, startSearching } from "../../api/work";
 import { AtomState } from "../../flux/store";
 import { useQuery } from "react-query";
-import { message } from "antd";
+import { Card, message } from "antd";
 import { setTemplates } from "../../flux/reducers/extras";
 import { getTemplatesNames } from "../../api/templates";
 import { showMessage } from "../../utils";
@@ -11,6 +11,11 @@ import EmailChart from "../../components/Graphs/LineChart";
 import "react-toastify/dist/ReactToastify.css";
 import "../../css/index.css";
 import "./index.css";
+import { userChats } from "../../api/conversation";
+import { setChatsData } from "../../flux/reducers/chats";
+import { setUser } from "../../flux/reducers/auth";
+import Conversation from "../../components/Conversation";
+import { useNavigate } from "react-router-dom";
 
 type filtersType = {
   selectedTags: Array<any>;
@@ -18,7 +23,11 @@ type filtersType = {
   numOfEmails: number | undefined;
 };
 function Dashboard() {
+  const user = useSelector((state: AtomState) => state?.auth?.user);
+  const navigate = useNavigate();
+
   const [messageApi, contextHolder] = message.useMessage();
+  const [chats, setChats] = useState([]);
 
   const [filters, setFilters] = useState<filtersType>({
     selectedTags: [],
@@ -34,6 +43,9 @@ function Dashboard() {
   const dispatch = useDispatch();
   const [statusMessage, setStatusMessage] = useState("IDLE");
 
+  const gotToChats = () => {
+    navigate("/chat");
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -105,6 +117,23 @@ function Dashboard() {
     showMessage("success", data.message, messageApi);
   };
 
+  useEffect(() => {
+    const getChats = async () => {
+      try {
+        const { data } = await userChats(user._id);
+
+        dispatch(setChatsData(data));
+        setChats(data);
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          dispatch(setUser({}));
+          dispatch(setChatsData({}));
+        }
+        console.log("Error | Pages | Chat", error);
+      }
+    };
+    getChats();
+  }, [user]); //[user]
   return (
     <>
       {/* Content Wrapper */}
@@ -361,30 +390,16 @@ function Dashboard() {
                     </h6>
                   </div>
                   <div className="card-body">
-                    <div className="text-center">
-                      <img
-                        className="img-fluid px-3 px-sm-4 mt-3 mb-4"
-                        style={{ width: "25rem" }}
-                        src="img/undraw_posting_photo.svg"
-                        alt="..."
-                      />
-                    </div>
-                    <p>
-                      Add some quality, svg illustrations to your project
-                      courtesy of{" "}
-                      <a
-                        target="_blank"
-                        rel="nofollow"
-                        href="https://undraw.co/"
-                      >
-                        unDraw
-                      </a>
-                      , a constantly updated collection of beautiful svg images
-                      that you can use completely free and without attribution!
-                    </p>
-                    <a target="_blank" rel="nofollow" href="https://undraw.co/">
-                      Browse Illustrations on unDraw →
-                    </a>
+                    {chats.map((chat, key) => (
+                      <div key={key} onClick={() => gotToChats()}>
+                        <Conversation
+                          data={chat}
+                          currentUserId={user._id}
+                          isActiveChat={true}
+                          key={key}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
