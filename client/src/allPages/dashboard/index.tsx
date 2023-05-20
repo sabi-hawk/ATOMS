@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkWorkExists, sendEmails, startSearching } from "../../api/work";
+
 import { AtomState } from "../../flux/store";
-import { useQuery } from "react-query";
-import { Card, message } from "antd";
-import { setTemplates } from "../../flux/reducers/extras";
-import { getTemplatesNames } from "../../api/templates";
-import { showMessage } from "../../utils";
+
 import EmailChart from "../../components/Graphs/LineChart";
 import "react-toastify/dist/ReactToastify.css";
 import "../../css/index.css";
@@ -16,105 +12,18 @@ import { setChatsData } from "../../flux/reducers/chats";
 import { setUser } from "../../flux/reducers/auth";
 import Conversation from "../../components/Conversation";
 import { useNavigate } from "react-router-dom";
+import ControlPanel from "../../components/ControlPanel";
 
-type filtersType = {
-  selectedTags: Array<any>;
-  templateID: string;
-  numOfEmails: number | undefined;
-};
 function Dashboard() {
   const user = useSelector((state: AtomState) => state?.auth?.user);
   const navigate = useNavigate();
 
-  const [messageApi, contextHolder] = message.useMessage();
   const [chats, setChats] = useState([]);
 
-  const [filters, setFilters] = useState<filtersType>({
-    selectedTags: [],
-    templateID: "",
-    numOfEmails: undefined,
-  });
-  const {
-    auth: {
-      user: { tags, token, _id },
-    },
-    extras: { templates },
-  } = useSelector((state: AtomState) => state);
   const dispatch = useDispatch();
-  const [statusMessage, setStatusMessage] = useState("IDLE");
 
   const gotToChats = () => {
     navigate("/chat");
-  };
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      const {
-        data: {
-          work: { status },
-        },
-      } = await startSearching({
-        tags: filters.selectedTags,
-        templateId: filters.templateID.split(".")[0],
-        emailThreshold: filters.numOfEmails,
-      });
-      setStatusMessage(status);
-      showMessage("success", "Searching in Progress !", messageApi);
-    } catch (error) {
-      console.log("Error | Dashboard | handleSubmit");
-    }
-  };
-
-  const state = useQuery(["workStatus"], async () => {
-    const {
-      data: {
-        work: { status: workStatus },
-      },
-    } = await checkWorkExists();
-    if (workStatus) {
-      setStatusMessage(workStatus);
-    }
-  });
-
-  useEffect(() => {
-    const statusCheck = async () => {
-      const {
-        status,
-        data: {
-          work: { status: workStatus },
-        },
-      } = await checkWorkExists();
-
-      if (workStatus) {
-        setStatusMessage(workStatus);
-      }
-    };
-    statusCheck();
-  }, []);
-
-  useEffect(() => {
-    const getTemplateNames = async () => {
-      const { data } = await getTemplatesNames(_id);
-      dispatch(setTemplates(data.files));
-    };
-    getTemplateNames();
-  }, []);
-
-  const handleSelectedTag = (tag: string) => {
-    if (filters.selectedTags.includes(tag)) {
-      setFilters({
-        ...filters,
-        selectedTags: filters.selectedTags.filter((t) => t !== tag),
-      });
-    } else {
-      setFilters({ ...filters, selectedTags: [...filters.selectedTags, tag] });
-    }
-  };
-
-  const handleSendEmails = async () => {
-    const { data } = await sendEmails();
-    state.refetch();
-    showMessage("success", data.message, messageApi);
   };
 
   useEffect(() => {
@@ -137,7 +46,7 @@ function Dashboard() {
   return (
     <>
       {/* Content Wrapper */}
-      {contextHolder}
+
       <div id="content-wrapper" className="d-flex flex-column">
         {/* Main Content */}
         <div id="content">
@@ -165,119 +74,7 @@ function Dashboard() {
                   {/* Card Body */}
                   <div className="card-body">
                     <div className="chart-area">
-                      <form
-                        className="form-dashboard-main"
-                        onSubmit={handleSubmit}
-                      >
-                        <label className="email-dashboard-heading mb-1">
-                          Select Email Template
-                        </label>
-                        <div className="input-group mb-3">
-                          <select
-                            onChange={(e: any) =>
-                              setFilters({
-                                ...filters,
-                                templateID: e.target.value,
-                              })
-                            }
-                            className="custom-select"
-                            required
-                          >
-                            <option value=""> Choose Template</option>
-                            {templates?.map((name: string, index) => (
-                              <option key={index} value={name}>
-                                {name.includes("design")
-                                  ? name.split(".")[0]
-                                  : name.split(".")[1]}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <label className="email-dashboard-heading mb-1">
-                          Select Tags
-                        </label>
-                        <div className="d-flex gap-3 mb-4 tags-p-main">
-                          {tags.map((tag: string, index) => (
-                            <p
-                              className="tags-p m-0"
-                              style={{
-                                background: filters.selectedTags.includes(tag)
-                                  ? "green"
-                                  : "",
-                                color: filters.selectedTags.includes(tag)
-                                  ? "white"
-                                  : "black",
-                              }}
-                              key={index}
-                              onClick={() => handleSelectedTag(tag)}
-                            >
-                              {tag}
-                            </p>
-                          ))}
-                        </div>
-
-                        <label className="email-dashboard-heading mb-1">
-                          Set Email Threshold
-                        </label>
-                        <div className="d-flex submit-dashboard gap-2 justify-content-between">
-                          <input
-                            className="form-control w-25"
-                            min="1"
-                            max="10"
-                            type="number"
-                            value={filters.numOfEmails || ""}
-                            onChange={(event) =>
-                              setFilters({
-                                ...filters,
-                                numOfEmails: Number(event.target.value),
-                              })
-                            }
-                            required
-                          />
-                          <div className="d-flex gap-2 justify-content-between">
-                            <button
-                              type="submit"
-                              className="btn btn-primary"
-                              disabled={statusMessage === "IDLE" ? false : true}
-                            >
-                              Start Searching
-                            </button>
-                            <button
-                              id="send-emails"
-                              type="button"
-                              className="btn btn-primary"
-                              disabled={
-                                statusMessage === "done-searching"
-                                  ? false
-                                  : true
-                              }
-                              onClick={handleSendEmails}
-                            >
-                              Send Emails
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-
-                      <div className="d-flex form-dashboard-main justify-content-between mb-0 align-items-center">
-                        {statusMessage !== "" ? (
-                          <div>
-                            <small>
-                              {statusMessage === "done-searching"
-                                ? "Searching is Completed now you can send emails"
-                                : "Searching in Progress"}
-                            </small>
-                            <p className="m-0">Status : {statusMessage}</p>
-                          </div>
-                        ) : (
-                          <p className="m-0">Status : IDLE</p>
-                        )}
-
-                        <button type="button" className="btn btn-success">
-                          Check Status
-                        </button>
-                      </div>
+                      <ControlPanel />
                     </div>
                   </div>
                 </div>

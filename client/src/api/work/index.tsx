@@ -22,8 +22,8 @@ export async function checkWorkExists(): Promise<any> {
   return API.get("/work/status");
 }
 
-export async function sendEmails(): Promise<any> {
-  return API.post("/work/send/emails");
+export async function sendEmails(subject: string): Promise<any> {
+  return API.post("/work/send/emails", { subject });
 }
 export async function getWorkStatistics(): Promise<any> {
   return API.get("/work/get_WorkStatistics");

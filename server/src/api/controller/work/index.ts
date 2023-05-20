@@ -96,7 +96,7 @@ export const sendEmails = async (req: Request, res: Response) => {
             let mailOptions = {
                 from: data.email,
                 to: to,
-                subject: "Promotions",
+                subject: req.body.subject || "Promotions",
                 html: htmlContent,
                 text: undefined,
                 attachment: undefined
