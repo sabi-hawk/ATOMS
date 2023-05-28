@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Line } from "@ant-design/charts";
+import { Area } from "@ant-design/charts";
 import { useState } from "react";
 import { getWorkStatistics } from "../../api/work";
 
@@ -25,7 +25,7 @@ const EmailChart = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching data</div>;
 
-  return <Line {...config} />;
+  return <Area {...config} />;
 };
 
 export default EmailChart;

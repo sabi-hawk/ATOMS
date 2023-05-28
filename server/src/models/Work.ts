@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const statusEnum = ['searching', "sending", "completed"]
+const statusEnum = ['IDLE', 'searching', "sending", "completed"]
 const WorkSchema = new mongoose.Schema(
     {
         userId: { type: String },

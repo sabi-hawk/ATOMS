@@ -4,13 +4,19 @@ import { Button, Card, message } from "antd";
 import { setTemplates } from "../../flux/reducers/extras";
 import { getTemplatesNames } from "../../api/templates";
 import { showMessage } from "../../utils";
-import { checkWorkExists, sendEmails, startSearching } from "../../api/work";
+import {
+  checkWorkExists,
+  sendEmails,
+  sendEmailsModifies,
+  startSearching,
+} from "../../api/work";
 import { useDispatch, useSelector } from "react-redux";
 import { AtomState } from "../../flux/store";
+import axios from "axios";
 
 type filtersType = {
   selectedTags: Array<any>;
-  templateID: string;
+  templateId: string;
   numOfEmails: number | undefined;
 };
 
@@ -25,13 +31,20 @@ function ControlPanel() {
   const [statusMessage, setStatusMessage] = useState("IDLE");
   const [mailSubject, setMailSubject] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [fileSelected, setFileSelected] = useState(false);
 
   const [filters, setFilters] = useState<filtersType>({
     selectedTags: [],
-    templateID: "",
+    templateId: "",
     numOfEmails: undefined,
   });
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  const handleFileChange = (event: any) => {
+    setFilters({ ...filters, selectedTags: [], numOfEmails: undefined });
+    setFileSelected(true);
+    setSelectedFile(event.target.files[0]);
+  };
   const dispatch = useDispatch();
 
   const handleSelectedTag = (tag: string) => {
@@ -44,11 +57,25 @@ function ControlPanel() {
       setFilters({ ...filters, selectedTags: [...filters.selectedTags, tag] });
     }
   };
-
   const handleSendEmails = async () => {
-    const { data } = await sendEmails(mailSubject);
-    state.refetch();
-    showMessage("success", data.message, messageApi);
+    console.log("CHECK", selectedFile);
+    const formData = new FormData();
+    if (selectedFile) {
+      formData.append("emailFile", selectedFile);
+      formData.append(
+        "additionalData",
+        JSON.stringify({ ...filters, subject: mailSubject })
+      );
+      const { data } = await sendEmailsModifies(formData);
+      state.refetch();
+      showMessage("success", data.message, messageApi);
+      setSelectedFile(null);
+      setFileSelected(false);
+    } else {
+      const { data } = await sendEmails(mailSubject);
+      state.refetch();
+      showMessage("success", data.message, messageApi);
+    }
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -59,7 +86,7 @@ function ControlPanel() {
         },
       } = await startSearching({
         tags: filters.selectedTags,
-        templateId: filters.templateID.split(".")[0],
+        templateId: filters.templateId.split(".")[0],
         emailThreshold: filters.numOfEmails,
       });
       setStatusMessage(status);
@@ -116,7 +143,7 @@ function ControlPanel() {
             onChange={(e: any) =>
               setFilters({
                 ...filters,
-                templateID: e.target.value,
+                templateId: e.target.value,
               })
             }
             className="custom-select"
@@ -133,6 +160,12 @@ function ControlPanel() {
           </select>
         </div>
 
+        <label className="email-dashboard-heading mb-1">
+          Import Email's(.txt) File
+        </label>
+        <div className="input-group mb-3">
+          <input type="file" onChange={handleFileChange} accept=".txt" />
+        </div>
         <label className="email-dashboard-heading mb-1">Select Tags</label>
         <div className="d-flex gap-3 mb-4 tags-p-main">
           {tags.map((tag: string, index) => (
@@ -143,7 +176,7 @@ function ControlPanel() {
                 color: filters.selectedTags.includes(tag) ? "white" : "black",
               }}
               key={index}
-              onClick={() => handleSelectedTag(tag)}
+              onClick={!fileSelected ? () => handleSelectedTag(tag) : undefined}
             >
               {tag}
             </p>
@@ -155,6 +188,7 @@ function ControlPanel() {
         </label>
         <div className="d-flex submit-dashboard gap-2 justify-content-between">
           <input
+            disabled={fileSelected}
             className="form-control w-25"
             min="1"
             max="10"
@@ -166,13 +200,15 @@ function ControlPanel() {
                 numOfEmails: Number(event.target.value),
               })
             }
-            required
+            required={!fileSelected}
           />
           <div className="d-flex gap-2 justify-content-between">
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={statusMessage === "IDLE" ? false : true}
+              disabled={
+                !fileSelected && statusMessage === "IDLE" ? false : true
+              }
             >
               Start Searching
             </button>
@@ -180,7 +216,11 @@ function ControlPanel() {
               //   id="send-emails"
               type="button"
               className="btn btn-primary"
-              disabled={statusMessage === "done-searching" ? false : true}
+              disabled={
+                fileSelected || statusMessage === "done-searching"
+                  ? false
+                  : true
+              }
               //   onClick={handleSendEmails}
               id="btn-export"
               data-bs-toggle="modal"

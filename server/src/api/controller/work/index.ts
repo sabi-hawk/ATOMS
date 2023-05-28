@@ -36,7 +36,6 @@ export const startWorking = async (req: Request, res: Response) => {
 export const checkWorkExists = async (req: Request, res: Response) => {
     try {
         const data = await authenticateRequest(req, res);
-        // const work = await Work.findOne({ userId: data.userId, status: "searching" })
         const work = await Work.findOne({ userId: data.userId })
             .sort({ timeStamp: -1 })
             .limit(1).exec()
@@ -53,10 +52,13 @@ export const checkWorkExists = async (req: Request, res: Response) => {
 const findFile = async (userId: string | undefined, templateId: string | undefined, req: Request, res: Response) => {
     let foundFileName: string = "";
     try {
+        console.log("template id", templateId)
         const files = await fs.promises.readdir(path.resolve(__dirname, "../../../../public/templates/html"));
         for (const file of files) {
             console.log("File", file);
-            if (file.includes(`${userId}_${templateId}`) || file.includes(templateId || "")) {
+            // file.includes(`${userId}_${templateId}`) || file.includes(templateId || "")
+            // @ts-ignore
+            if (file.includes(templateId?.split(".")[0])) {
                 foundFileName = file;
                 console.log("File Name", foundFileName);
                 const html = await fs.promises.readFile(path.resolve(__dirname, `../../../../public/templates/html/${foundFileName}`), "utf-8");
@@ -71,6 +73,13 @@ const findFile = async (userId: string | undefined, templateId: string | undefin
 };
 
 export const sendEmails = async (req: Request, res: Response) => {
+    let sendTo = [], additionalData;
+    const userData = await authenticateRequest(req, res);
+    if (req?.file?.path !== undefined) {
+        additionalData = JSON.parse(req?.body?.additionalData);
+    }
+
+    const filePath = req?.file?.path;
     var transport = nodemailer.createTransport({
         host: "smtp.mailtrap.io",
         port: 2525,
@@ -79,24 +88,50 @@ export const sendEmails = async (req: Request, res: Response) => {
             pass: "a033c8ab71b200"
         }
     });
-
     try {
         let htmlContent: string = ""
         const data = await authenticateRequest(req, res);
-        const work = await Work.findOne({ userId: data.userId })
-            .sort({ timeStamp: -1 })
-            .limit(1).exec()
+        let work = undefined;
+        if (filePath) {
+            console.log("Send To", sendTo.length, "template", additionalData.templateId);
+            work = await new Work({
+                userId: userData.userId,
+                tags: [],
+                templateId: additionalData.templateId,
+                emailThreshold: 0,
+                status: "IDLE",
+                name: req.body.name
+            }).save();
+            console.log("Work Id", work._id);
+
+        } else {
+            work = await Work.findOne({ userId: data.userId })
+                .sort({ timeStamp: -1 })
+                .limit(1).exec()
+        }
         if (work) {
             htmlContent = await findFile(work.userId, work.templateId, req, res);
             await Work.findByIdAndUpdate(work._id, { status: "IDLE" })
 
             res.status(200).json({ message: "Mails are in Queue!", status: "IDLE" })
-            const to = await work.emailsList.map((element) => element.email);
-
+            if (filePath) {
+                try {
+                    const data = await fs.promises.readFile(filePath, "utf-8");
+                    sendTo = data.trim().split("\n").map((email) => email.replace(/\r$/, ""));
+                    await Work.findByIdAndUpdate(work._id, { emailThreshold: sendTo.length })
+                    await fs.promises.unlink(filePath);
+                } catch (err) {
+                    console.error("Failed to read or delete the uploaded file.", err);
+                    res.status(500).send("Failed to read the uploaded file.");
+                    return;
+                }
+            } else {
+                sendTo = await work.emailsList.map((element) => element.email);
+            }
             let mailOptions = {
                 from: data.email,
-                to: to,
-                subject: req.body.subject || "Promotions",
+                to: sendTo,
+                subject: req.body.subject || additionalData.subject || "Promotions",
                 html: htmlContent,
                 text: undefined,
                 attachment: undefined
@@ -124,7 +159,6 @@ export const get_WorkStatistics = async (req: Request, res: Response) => {
         const data = await authenticateRequest(req, res);
         const workData = await Work.find({ userId: data.userId });
 
-        console.log("FOUND OBJS", workData)
         // Process the data to get the email count per day
         const emailData = workData.reduce((acc: any, cur: any) => {
             const dateStr = new Date(cur.timeStamp).toISOString().substr(0, 10);
@@ -144,4 +178,24 @@ export const get_WorkStatistics = async (req: Request, res: Response) => {
         console.error(err);
         res.status(500).send("Server Error");
     }
-}  
+}
+export const get_WorkLogs = async (req: Request, res: Response) => {
+    try {
+        const data = await authenticateRequest(req, res);
+        console.log("FOUND ID", data.userId)
+        const workData = await Work.find({ userId: data.userId })
+            .sort({ timeStamp: -1 })
+            .exec();
+
+        console.log("Here", workData)
+        if (workData) {
+            res.status(200).json({ data: workData });
+        }
+        else {
+            res.status(404).json({ message: "No Logs Found!" })
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Server Error");
+    }
+} 

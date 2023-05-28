@@ -1,33 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
-import memories from "./images/memories.jpg";
-import useStyles from "./style";
-import Posts from "./components/Posts/Posts";
-import Form from "./components/Form/Form";
-import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "./flux/reducers/posts/index";
-import { fetchPosts } from "./api";
-import { extractEmails } from "./api/python";
-import { getEmailRecords } from "./flux/reducers/scrappedData";
+import { useSelector } from "react-redux";
 import Demo from "./components/Demo";
 import Navbar from "./components/Navbar";
 import {
-  BrowserRouter as Router,
-  Routes, // Switch
+  Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
 import About from "./components/About";
 import Dashboard from "./allPages/dashboard";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Composer from "./allPages/composer";
 import Chat from "./allPages/chat";
 import Authentication from "./allPages/auth";
 import { AtomState } from "./flux/store";
-import path from "path";
 import ClientAuthentication from "./allPages/client/auth";
+import UserLogs from "./allPages/UserLogs";
 
 const App = () => {
   const user = useSelector((state: AtomState) => state?.auth?.user);
@@ -73,6 +61,10 @@ const App = () => {
                 <Route
                   path="/chat"
                   element={user ? <Chat /> : <Navigate to="../auth" />}
+                />
+                <Route
+                  path="/logs"
+                  element={user ? <UserLogs /> : <Navigate to="../logs" />}
                 />
                 <Route
                   path="*"
@@ -141,12 +133,3 @@ const App = () => {
   );
 };
 export default App;
-// http://localhost:3000/provider/63ecf7d9a557f89d27373622/chat
-{
-  /* <Route path="/" element={<Authentication />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/mail-templates" element={<Composer />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/demo" element={<Demo />} />
-              <Route path="/chat" element={<Chat />} /> */
-}

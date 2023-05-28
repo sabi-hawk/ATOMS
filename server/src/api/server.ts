@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import apiRouter from "./routes/index";
-import fileUpload from "express-fileupload";
+// import fileUpload from "express-fileupload";
 import path from "path";
 import http from "http";
 import { Server } from "socket.io";
@@ -72,11 +72,11 @@ app.use((req, res, next) => {
 
 app.use("/images", express.static(path.join(__dirname, '../../public')))
 
-app.use(
-  fileUpload({
-    createParentPath: true,
-  })
-);
+// app.use(
+//   fileUpload({
+//     createParentPath: true,
+//   })
+// );
 app.use("/api", apiRouter);
 
 server.listen(3002, () =>
