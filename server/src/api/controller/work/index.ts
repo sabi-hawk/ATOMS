@@ -55,12 +55,9 @@ const findFile = async (userId: string | undefined, templateId: string | undefin
         console.log("template id", templateId)
         const files = await fs.promises.readdir(path.resolve(__dirname, "../../../../public/templates/html"));
         for (const file of files) {
-            console.log("File", file);
-            // file.includes(`${userId}_${templateId}`) || file.includes(templateId || "")
             // @ts-ignore
             if (file.includes(templateId?.split(".")[0])) {
                 foundFileName = file;
-                console.log("File Name", foundFileName);
                 const html = await fs.promises.readFile(path.resolve(__dirname, `../../../../public/templates/html/${foundFileName}`), "utf-8");
                 return html;
             }
@@ -93,7 +90,6 @@ export const sendEmails = async (req: Request, res: Response) => {
         const data = await authenticateRequest(req, res);
         let work = undefined;
         if (filePath) {
-            console.log("Send To", sendTo.length, "template", additionalData.templateId);
             work = await new Work({
                 userId: userData.userId,
                 tags: [],
@@ -102,7 +98,6 @@ export const sendEmails = async (req: Request, res: Response) => {
                 status: "IDLE",
                 name: req.body.name
             }).save();
-            console.log("Work Id", work._id);
 
         } else {
             work = await Work.findOne({ userId: data.userId })
@@ -182,12 +177,10 @@ export const get_WorkStatistics = async (req: Request, res: Response) => {
 export const get_WorkLogs = async (req: Request, res: Response) => {
     try {
         const data = await authenticateRequest(req, res);
-        console.log("FOUND ID", data.userId)
         const workData = await Work.find({ userId: data.userId })
             .sort({ timeStamp: -1 })
             .exec();
 
-        console.log("Here", workData)
         if (workData) {
             res.status(200).json({ data: workData });
         }
