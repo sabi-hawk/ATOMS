@@ -61,7 +61,7 @@ function ControlPanel() {
     console.log("CHECK", selectedFile);
     const formData = new FormData();
     if (selectedFile) {
-      formData.append("emailFile", selectedFile);
+      formData.append("single", selectedFile);
       formData.append(
         "additionalData",
         JSON.stringify({ ...filters, subject: mailSubject })
