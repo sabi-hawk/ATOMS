@@ -24,19 +24,19 @@ This project is a full-stack web application built using the MERN Stack (MongoDB
 To run this project locally, follow these steps:
 
 1. Clone the repository:
-## git clone https://github.com/sabi-hawk/atoms.git
+### git clone https://github.com/sabi-hawk/atoms.git
 
 3. Install dependencies for the server:
-## go to client's directory & hit: npm install
+### go to client's directory & hit: npm install
 
 5. Install dependencies for the client:
-## go to server's directory & hit: npm install
+### go to server's directory & hit: npm install
 
 6. Start the development server:
-## go to server's directory & hit: npm run dev:server
+### go to server's directory & hit: npm run dev:server
 
 7. Start the client:
-## go to client's directory & hit: npm run dev:client
+### go to client's directory & hit: npm run dev:client
 
 
 8. Open your browser and visit `http://localhost:3000` to access the application.
