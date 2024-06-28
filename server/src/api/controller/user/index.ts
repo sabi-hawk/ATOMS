@@ -35,20 +35,44 @@ export const getUserData = async (req: Request, res: Response) => {
     }
 }
 
+// export const addUserTags = async (req: Request, res: Response) => {
+//     try {
+//         const data = await authenticateRequest(req, res);
+//         const user = await User.findOne({ _id: data.userId });
+//         if (user) {
+//             let updatedTags = user.tags;
+//             updatedTags = updatedTags.concat(req.body.tags);
+//             await User.findOneAndUpdate({ _id: data.userId, tags: updatedTags })
+//             return res.status(200).json({ message: "Tags are Updated Successfully!" })
+//         }
+//         return res.status(404).json({ message: "User not found!" })
+
+//     } catch (error) {
+//         console.log("Error | controller | user | addUserTags | catch", error)
+//         return res.status(500).json({ message: "Something went wrong", error: error });
+//     }
+// }
 export const addUserTags = async (req: Request, res: Response) => {
     try {
         const data = await authenticateRequest(req, res);
         const user = await User.findOne({ _id: data.userId });
-        if (user) {
-            let updatedTags = user.tags;
-            updatedTags = updatedTags.concat(req.body.tags);
-            await User.findOneAndUpdate({ _id: data.userId, tags: updatedTags })
-            return res.status(200).json({ message: "Tags are Updated Successfully!" })
-        }
-        return res.status(404).json({ message: "User not found!" })
 
+        if (user) {
+            let updatedTags = user.tags.concat(req.body.tags);
+            
+            // Update user document with new tags
+            await User.findOneAndUpdate(
+                { _id: data.userId },  // Find user by ID
+                { $set: { tags: updatedTags } },  // Update tags field
+                { new: true }  // Return the updated document
+            );
+
+            return res.status(200).json({ message: "Tags are Updated Successfully!" });
+        }
+
+        return res.status(404).json({ message: "User not found!" });
     } catch (error) {
-        console.log("Error | controller | user | addUserTags | catch", error)
+        console.log("Error | controller | user | addUserTags | catch", error);
         return res.status(500).json({ message: "Something went wrong", error: error });
     }
 }

@@ -78,13 +78,13 @@ export const sendEmails = async (req: Request, res: Response) => {
 
     const filePath = req?.file?.path;
     var transport = nodemailer.createTransport({
-        host: "smtp.mailtrap.io",
+        host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-            user: "6f97c92e255da9",
-            pass: "a033c8ab71b200"
+          user: "f3326a5cf3592e",
+          pass: "ef93f639b26911"
         }
-    });
+      });
     try {
         let htmlContent: string = ""
         const data = await authenticateRequest(req, res);

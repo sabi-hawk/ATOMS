@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { AtomState } from "../../flux/store";
 import { prettyName } from "../../utils";
 import "../index.css";
+import { saveUserTags } from "../../api/user";
 
 const ProfileModal = () => {
   const {
@@ -15,8 +16,9 @@ const ProfileModal = () => {
   const chatLink = `http://localhost:3000/provider/${_id}/chat`;
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleSave = () => {
-    console.log("Saved!");
+  const handleSave = async () => {
+    const { data } = await saveUserTags(tags);
+    console.log("Saved!", data);
   };
   const handleTagChange = (index: number, value: string) => {
     const newTags = [...tags];

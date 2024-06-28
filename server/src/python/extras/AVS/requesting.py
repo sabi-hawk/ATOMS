@@ -139,6 +139,10 @@ query = sys.argv[1]
 numOfEmails = int(sys.argv[2])
 numOfPages = int(sys.argv[3])
 
+# query = "web"
+# numOfEmails = 5
+# numOfPages = 5
+
 page_no = 0
 while numOfPages > 0:
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5)\
